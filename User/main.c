@@ -49,7 +49,7 @@ int main(void)
 	//开启任务调度
     vTaskStartScheduler();
 
-    //while (1) { }
+    while (1) { }
 }
 
 void sys_init(void){
