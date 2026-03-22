@@ -413,6 +413,26 @@ uint8_t ESP8266_MQTT_Publish(uint8_t link_id, const char *topic, const char *pay
 
 
 
+uint8_t ESP8266_MQTT_Clean(uint8_t link_id, uint32_t timeout_ms)
+{
+    char cmd[64];
+
+    snprintf(cmd, sizeof(cmd), "AT+MQTTCLEAN=%u", (unsigned)link_id);
+
+    if (esp_cmd_ack_retry(cmd, "OK", timeout_ms, 0))
+    {
+        s_mqtt_ok = 0;
+        return 1;
+    }
+
+    /* 某些固件在已断开时会直接 ERROR，这里至少把本地状态清掉 */
+    s_mqtt_ok = 0;
+    return 0;
+}
+
+
+
+
 
 /* ================== 订阅回调（可选） ================== */
 static esp8266_mqtt_msg_cb_t s_mqtt_cb = 0;

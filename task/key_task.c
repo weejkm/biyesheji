@@ -106,18 +106,21 @@ void KEY_Task(void *arg)
                 }
                 else if (g_oled_select == 1)
                 {
-                    if (tag == 1) dev_fan_state = (dev_fan_state + 1) % 2;
-                    Fan_set(dev_fan_state ? FAN_ON : FAN_OFF);
-					
-					if (tag == 1 && dev_fan_state != FAN_ON)
+                    if (tag == 1)
                     {
-						dev_fan_state=FAN_ON;
-						Fan_set(dev_fan_state);
+                        if (dev_fan_state != FAN_ON)
+                        {
+                            dev_fan_state = FAN_ON;
+                            Fan_set(FAN_ON);
+                        }
                     }
-                    else if (tag == -1 && dev_fan_state != FAN_OFF)
+                    else if (tag == -1)
                     {
-						dev_fan_state=FAN_OFF;
-						Fan_set(dev_fan_state);
+                        if (dev_fan_state != FAN_OFF)
+                        {
+                            dev_fan_state = FAN_OFF;
+                            Fan_set(FAN_OFF);
+                        }
                     }
                 }
                 else

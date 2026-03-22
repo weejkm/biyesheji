@@ -49,6 +49,7 @@ uint8_t ESP8266_MQTT_Subscribe(uint8_t link_id, const char *topic, uint8_t qos,
                               uint32_t timeout_ms);
 uint8_t ESP8266_MQTT_Publish(uint8_t link_id, const char *topic, const char *payload,
                             uint8_t qos, uint8_t retain, uint32_t timeout_ms);
+uint8_t ESP8266_MQTT_Clean(uint8_t link_id, uint32_t timeout_ms);
 
 /* 接收 */
 uint8_t ESP8266_ReadLine(char *out, uint16_t out_len);   /* 按行读（以 \n 为一行结束） */
