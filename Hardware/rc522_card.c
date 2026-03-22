@@ -3,10 +3,10 @@
 #include "delay.h"
 #include "stdio.h"
 
-/* Ä¬ÈÏ KeyA£¨¶àÊı Mifare S50 ³ö³§ÎªÈ« 0xFF£© */
+/* é»˜è®¤ KeyAï¼ˆå¤šæ•° Mifare S50 å‡ºå‚ä¸ºå…¨ 0xFFï¼‰ */
 static uint8_t s_keyA[6] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
-/* ¿ÉÑ¡£ºÍâ²¿ĞŞ¸Ä KeyA */
+/* å¯é€‰ï¼šå¤–éƒ¨ä¿®æ”¹ KeyA */
 void RC522_SetKeyA(const uint8_t keyA[6])
 {
     if (keyA) memcpy(s_keyA, keyA, 6);
@@ -21,26 +21,26 @@ void RC522_SetKeyB(const uint8_t keyB[6])
 
 void RC522_BeginNewSession(void)
 {
-    // 1) Í£Ö¹ÃüÁî¡¢Çå FIFO¡¢ÍË³ö¼ÓÃÜ¡¢ÇåÎ»¶ÔÆë
+    // 1) åœæ­¢å‘½ä»¤ã€æ¸… FIFOã€é€€å‡ºåŠ å¯†ã€æ¸…ä½å¯¹é½
     RC522_WriteReg(MFRC522_REG_COMMAND, PCD_IDLE);
-    RC522_WriteReg(MFRC522_REG_FIFO_LEVEL, 0x80);     // Çå FIFO
+    RC522_WriteReg(MFRC522_REG_FIFO_LEVEL, 0x80);     // æ¸… FIFO
     RC522_ClearBitMask(MFRC522_REG_STATUS2, 0x08);    // Crypto1Off
-    RC522_WriteReg(MFRC522_REG_BIT_FRAMING, 0x00);    // Î»¶ÔÆëÇåÁã
+    RC522_WriteReg(MFRC522_REG_BIT_FRAMING, 0x00);    // ä½å¯¹é½æ¸…é›¶
 
-    // 2) »Ö¸´¹Ø¼üÍ¨ĞÅ²ÎÊı£¨Óë³£¼û²Î¿¼³õÊ¼»¯Ò»ÖÂ£©
-    RC522_WriteReg(MFRC522_REG_MODE,      0x3D);      // CRC ³õÖµ 0x6363
+    // 2) æ¢å¤å…³é”®é€šä¿¡å‚æ•°ï¼ˆä¸å¸¸è§å‚è€ƒåˆå§‹åŒ–ä¸€è‡´ï¼‰
+    RC522_WriteReg(MFRC522_REG_MODE,      0x3D);      // CRC åˆå€¼ 0x6363
     RC522_WriteReg(MFRC522_REG_TX_MODE,   0x00);
     RC522_WriteReg(MFRC522_REG_RX_MODE,   0x00);
 
-    // ËµÃ÷£ºÄãµÄ 0x15 ºêÃû½Ğ TX_AUTO£¬µ«¸ÃµØÖ·ÆäÊµÊÇ TxASK ¼Ä´æÆ÷£¨Force100%ASK ÔÚ bit6£©
+    // è¯´æ˜ï¼šä½ çš„ 0x15 å®åå« TX_AUTOï¼Œä½†è¯¥åœ°å€å…¶å®æ˜¯ TxASK å¯„å­˜å™¨ï¼ˆForce100%ASK åœ¨ bit6ï¼‰
     RC522_WriteReg(MFRC522_REG_TX_AUTO,   0x40);      // Force 100% ASK
 
-    RC522_WriteReg(MFRC522_REG_T_MODE,        0x8D);  // ¶¨Ê±Æ÷×Ô¶¯
+    RC522_WriteReg(MFRC522_REG_T_MODE,        0x8D);  // å®šæ—¶å™¨è‡ªåŠ¨
     RC522_WriteReg(MFRC522_REG_T_PRESCALER,   0x3E);
     RC522_WriteReg(MFRC522_REG_T_RELOAD_H,    0x00);
     RC522_WriteReg(MFRC522_REG_T_RELOAD_L,    30);
 
-    // 3) RF ³¡ÖØÆô£¨Ä£ÄâÀë³¡ÔÙÈë³¡£©
+    // 3) RF åœºé‡å¯ï¼ˆæ¨¡æ‹Ÿç¦»åœºå†å…¥åœºï¼‰
     RC522_AntennaOff();  
     Delay_ms(20);
     RC522_AntennaOn();   
@@ -50,9 +50,9 @@ void RC522_BeginNewSession(void)
 
 
 
-/* ----------------- ±¾ÎÄ¼şÄÚ²¿Ê¹ÓÃµÄ¾Ö²¿°ïÖúº¯Êı ----------------- */
+/* ----------------- æœ¬æ–‡ä»¶å†…éƒ¨ä½¿ç”¨çš„å±€éƒ¨å¸®åŠ©å‡½æ•° ----------------- */
 
-/* ÈÏÖ¤£ºÖ±½ÓÓÃ RC522_ComMF522 Íê³É£¬²»ÒÀÀµ rc522.c ÀïµÄ RC522_Auth ·â×° */
+/* è®¤è¯ï¼šç›´æ¥ç”¨ RC522_ComMF522 å®Œæˆï¼Œä¸ä¾èµ– rc522.c é‡Œçš„ RC522_Auth å°è£… */
 static uint8_t rc522_auth_local(uint8_t authMode, uint8_t blockAddr,
                                 uint8_t *key, uint8_t *serNum4)
 {
@@ -62,20 +62,20 @@ static uint8_t rc522_auth_local(uint8_t authMode, uint8_t blockAddr,
     uint8_t frame[12];
 
     frame[0] = authMode;        // PICC_AUTHENT1A(0x60) / PICC_AUTHENT1B(0x61)
-    frame[1] = blockAddr;       // ¾ø¶Ô¿éºÅ
+    frame[1] = blockAddr;       // ç»å¯¹å—å·
     for (i = 0; i < 6; i++) frame[i + 2] = key[i];
     for (i = 0; i < 4; i++) frame[i + 8] = serNum4[i];
 
     status = RC522_ComMF522(PCD_AUTHENT, frame, 12, frame, &recvBits);
 
-    // ÑéÖ¤ÊÇ·ñ½øÈë¼ÓÃÜ×´Ì¬£¨Status2 ¼Ä´æÆ÷ MFCrypto1On Î» = 1£©
+    // éªŒè¯æ˜¯å¦è¿›å…¥åŠ å¯†çŠ¶æ€ï¼ˆStatus2 å¯„å­˜å™¨ MFCrypto1On ä½ = 1ï¼‰
     if ((status != MI_OK) || (!(RC522_ReadReg(MFRC522_REG_STATUS2) & 0x08)))
         status = MI_ERR;
 
     return status;
 }
 
-/* ¶Á¿é£ºÖ±½Ó×éÖ¡+µ÷ÓÃ RC522_ComMF522£¬²»ÒÀÀµ rc522.c µÄ RC522_Read */
+/* è¯»å—ï¼šç›´æ¥ç»„å¸§+è°ƒç”¨ RC522_ComMF522ï¼Œä¸ä¾èµ– rc522.c çš„ RC522_Read */
 static uint8_t rc522_read_local(uint8_t blockAddr, uint8_t *recv16)
 {
     uint8_t status;
@@ -87,14 +87,14 @@ static uint8_t rc522_read_local(uint8_t blockAddr, uint8_t *recv16)
     RC522_CalculateCRC(cmd, 2, &cmd[2]);
 
     status = RC522_ComMF522(PCD_TRANSCEIVE, cmd, 4, recv16, &backBits);
-    // ÆÚÍû 16 Êı¾İ + 2 CRC = 18 ×Ö½Ú = 144 bit = 0x90
+    // æœŸæœ› 16 æ•°æ® + 2 CRC = 18 å­—èŠ‚ = 144 bit = 0x90
     if ((status != MI_OK) || (backBits != 0x90))
         status = MI_ERR;
 
     return status;
 }
 
-/* Ğ´¿é£ºÖ±½Ó×éÖ¡+Á½²½ÎÕÊÖ£¬²»ÒÀÀµ rc522.c µÄ RC522_Write */
+/* å†™å—ï¼šç›´æ¥ç»„å¸§+ä¸¤æ­¥æ¡æ‰‹ï¼Œä¸ä¾èµ– rc522.c çš„ RC522_Write */
 static uint8_t rc522_write_local(uint8_t blockAddr, const uint8_t *data16)
 {
     uint8_t status;
@@ -102,23 +102,23 @@ static uint8_t rc522_write_local(uint8_t blockAddr, const uint8_t *data16)
     uint8_t ack[2];
     uint8_t cmd[4];
 
-    // ---- Step 1: Ğ´ÃüÁî ----
+    // ---- Step 1: å†™å‘½ä»¤ ----
     cmd[0] = PICC_WRITE;   // 0xA0
     cmd[1] = blockAddr;
     RC522_CalculateCRC(cmd, 2, &cmd[2]);
 
-    Delay_ms(2);  // ¡ï ĞÂÔöÑÓÊ± 2ms£¬¸ø¿¨·´Ó¦Ê±¼ä
+    Delay_ms(2);  // â˜… æ–°å¢å»¶æ—¶ 2msï¼Œç»™å¡ååº”æ—¶é—´
 
     status = RC522_ComMF522(PCD_TRANSCEIVE, cmd, 4, ack, &backBits);
     if ((status != MI_OK) || (backBits != 4) || ((ack[0] & 0x0F) != 0x0A))
         return MI_ERR;
 
-    // ---- Step 2: ·¢ËÍ16×Ö½ÚÊı¾İ + CRC ----
+    // ---- Step 2: å‘é€16å­—èŠ‚æ•°æ® + CRC ----
     uint8_t frame[18];
     memcpy(frame, data16, 16);
     RC522_CalculateCRC(frame, 16, &frame[16]);
 
-    Delay_ms(2);  // ¡ï ÔÙÑÓÊ± 2ms
+    Delay_ms(2);  // â˜… å†å»¶æ—¶ 2ms
 
     status = RC522_ComMF522(PCD_TRANSCEIVE, frame, 18, ack, &backBits);
     if ((status != MI_OK) || (backBits != 4) || ((ack[0] & 0x0F) != 0x0A))
@@ -127,19 +127,19 @@ static uint8_t rc522_write_local(uint8_t blockAddr, const uint8_t *data16)
     return MI_OK;
 }
 
-/* ----------------- ¶ÔÍâµÄ¸ß²ã½Ó¿Ú ----------------- */
+/* ----------------- å¯¹å¤–çš„é«˜å±‚æ¥å£ ----------------- */
 
-/* Ñ°¿¨£º³É¹¦·µ»Ø MI_OK£¨ÄãÒ²¿ÉÒÔÔÚÍâ²ã°ÑËüÓ³ÉäÎª RC522_CARD_OK£© */
+/* å¯»å¡ï¼šæˆåŠŸè¿”å› MI_OKï¼ˆä½ ä¹Ÿå¯ä»¥åœ¨å¤–å±‚æŠŠå®ƒæ˜ å°„ä¸º RC522_CARD_OKï¼‰ */
 uint8_t RC522_Search(uint8_t uid[4])
 {
     uint8_t status;
     uint8_t tmp[5];
 
-    // 1) Ñ°¿¨
+    // 1) å¯»å¡
     status = RC522_Request(PICC_REQIDL, tmp);
     if (status != MI_OK) return MI_ERR;
 
-    // 2) ·À³åÍ»£¨tmp[0..4]£¬×îºóÒ»×Ö½ÚÎªĞ£Ñé£©
+    // 2) é˜²å†²çªï¼ˆtmp[0..4]ï¼Œæœ€åä¸€å­—èŠ‚ä¸ºæ ¡éªŒï¼‰
     status = RC522_Anticoll(tmp);
     if (status != MI_OK) return MI_ERR;
 
@@ -152,7 +152,7 @@ uint8_t RC522_Search(uint8_t uid[4])
     return MI_OK;
 }
 
-/* ¶ÁÈ¡£ºsector ¡Ê [0..15]£¬blockInSector ¡Ê [0..3]£¬recvData Îª 16 ×Ö½Ú»º³å */
+/* è¯»å–ï¼šsector âˆˆ [0..15]ï¼ŒblockInSector âˆˆ [0..3]ï¼ŒrecvData ä¸º 16 å­—èŠ‚ç¼“å†² */
 uint8_t RC522_ReadBlock(uint8_t sector, uint8_t blockInSector, uint8_t recvData[16])
 {
 	RC522_Halt();
@@ -162,41 +162,41 @@ uint8_t RC522_ReadBlock(uint8_t sector, uint8_t blockInSector, uint8_t recvData[
     uint8_t id[5];
     uint8_t blockAddr = (uint8_t)(sector * 4U + blockInSector);
 
-    // 1) Ñ°¿¨
+    // 1) å¯»å¡
     status = RC522_Request(PICC_REQIDL, id);
     if (status != MI_OK) {
-		printf("Ñ°¿¨Ê§°Ü\r\n");
+		printf("å¯»å¡å¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 2) ·À³åÍ»
+    // 2) é˜²å†²çª
     status = RC522_Anticoll(id);
     if (status != MI_OK) {
-		printf("·À³åÍ»Ê§°Ü\r\n");
+		printf("é˜²å†²çªå¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 3) Ñ¡¿¨
+    // 3) é€‰å¡
     status = RC522_SelectTag(id);
     if (status != MI_OK) {
-		printf("Ñ¡¿¨Ê§°Ü\r\n");
+		printf("é€‰å¡å¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 4) ÈÏÖ¤£¨KeyA£©
+    // 4) è®¤è¯ï¼ˆKeyAï¼‰
     status = rc522_auth_local(PICC_AUTHENT1A, blockAddr, s_keyA, id);
     if (status != MI_OK) { RC522_Halt(); return MI_ERR; }
 
-    // 5) ¶ÁÈ¡
+    // 5) è¯»å–
     status = rc522_read_local(blockAddr, recvData);
 
-    // 6) Í£Ö¹Í¨ĞÅ
+    // 6) åœæ­¢é€šä¿¡
     RC522_Halt();
 
     return status; // MI_OK / MI_ERR
 }
 
-/* Ğ´Èë£ºsector ¡Ê [0..15]£¬blockInSector ¡Ê [0..3]£¬writeData Îª 16 ×Ö½Ú */
+/* å†™å…¥ï¼šsector âˆˆ [0..15]ï¼ŒblockInSector âˆˆ [0..3]ï¼ŒwriteData ä¸º 16 å­—èŠ‚ */
 uint8_t RC522_WriteBlock(uint8_t sector, uint8_t blockInSector, const uint8_t writeData[16])
 {
 	
@@ -207,43 +207,43 @@ uint8_t RC522_WriteBlock(uint8_t sector, uint8_t blockInSector, const uint8_t wr
     uint8_t id[5];
     uint8_t blockAddr = (uint8_t)(sector * 4U + blockInSector);
 
-    // 1) Ñ°¿¨
+    // 1) å¯»å¡
     status = RC522_Request(PICC_REQIDL, id);
     if (status != MI_OK) {
-		printf("Ñ°¿¨Ê§°Ü\r\n");
+		printf("å¯»å¡å¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 2) ·À³åÍ»
+    // 2) é˜²å†²çª
     status = RC522_Anticoll(id);
     if (status != MI_OK) {
-		printf("·Å³åÍ»Ê§°Ü\r\n");
+		printf("æ”¾å†²çªå¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 3) Ñ¡¿¨
+    // 3) é€‰å¡
     status = RC522_SelectTag(id);
     if (status != MI_OK) {
-		printf("Ñ¡¿¨Ê§°Ü\r\n");
+		printf("é€‰å¡å¤±è´¥\r\n");
 		return MI_ERR;
 	}
 
-    // 4) ÏÈÓÃ KeyA ÈÏÖ¤
+    // 4) å…ˆç”¨ KeyA è®¤è¯
     status = rc522_auth_local(PICC_AUTHENT1A, blockAddr, s_keyA, id);
     if (status == MI_OK) {
         status = rc522_write_local(blockAddr, writeData);
         if (status == MI_OK) { RC522_Halt(); return MI_OK; }
     }
-	printf("KeyA ÈÏÖ¤Ê§°Ü\r\n");
+	printf("KeyA è®¤è¯å¤±è´¥\r\n");
 
-    // 5) A Ğ´Ê§°Ü£¬³¢ÊÔ KeyB
+    // 5) A å†™å¤±è´¥ï¼Œå°è¯• KeyB
     status = rc522_auth_local(PICC_AUTHENT1B, blockAddr, s_keyB, id);
     if (status == MI_OK) {
         status = rc522_write_local(blockAddr, writeData);
         RC522_Halt();
         return status;
     }
-	printf("KeyB ÈÏÖ¤Ê§°Ü\r\n");
+	printf("KeyB è®¤è¯å¤±è´¥\r\n");
 
     RC522_Halt();
     return MI_ERR;

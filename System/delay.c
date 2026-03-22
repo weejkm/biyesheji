@@ -3,7 +3,7 @@
 
 
 /**
- * @brief ³õÊ¼»¯ÓÃÓÚÑÓÊ±µÄ¶¨Ê±Æ÷
+ * @brief åˆå§‹åŒ–ç”¨äºå»¶æ—¶çš„å®šæ—¶å™¨
  */
 void Timer_Init(void)
 {
@@ -11,7 +11,7 @@ void Timer_Init(void)
     
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
-    // ÅäÖÃ¶¨Ê±Æ÷Îª1MHz£¨1us¾«¶È£©
+    // é…ç½®å®šæ—¶å™¨ä¸º1MHzï¼ˆ1usç²¾åº¦ï¼‰
     TIM_TimeBaseStructure.TIM_Period = 0xFFFF;
     TIM_TimeBaseStructure.TIM_Prescaler = (SystemCoreClock / 1000000) - 1; // 72-1
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
@@ -26,7 +26,7 @@ void delay_init(void){
     
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
     
-    // ÅäÖÃ¶¨Ê±Æ÷Îª1MHz£¨1us¾«¶È£©
+    // é…ç½®å®šæ—¶å™¨ä¸º1MHzï¼ˆ1usç²¾åº¦ï¼‰
     TIM_TimeBaseStructure.TIM_Period = 0xFFFF;
     TIM_TimeBaseStructure.TIM_Prescaler = (SystemCoreClock / 1000000) - 1; // 72-1
     TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
@@ -37,8 +37,8 @@ void delay_init(void){
 }
 
 /**
- * @brief ¶¨Ê±Æ÷°æÎ¢ÃëÑÓÊ±
- * @param us: ÑÓÊ±Î¢ÃëÊı
+ * @brief å®šæ—¶å™¨ç‰ˆå¾®ç§’å»¶æ—¶
+ * @param us: å»¶æ—¶å¾®ç§’æ•°
  */
 void Delay_us(uint32_t us)
 {
@@ -55,8 +55,8 @@ void delay_us(uint32_t us)
 
 
 /**
- * @brief ºÁÃëÑÓÊ±º¯Êı
- * @param ms: ÑÓÊ±ºÁÃëÊı
+ * @brief æ¯«ç§’å»¶æ—¶å‡½æ•°
+ * @param ms: å»¶æ—¶æ¯«ç§’æ•°
  */
 void Delay_ms(uint32_t ms)
 {

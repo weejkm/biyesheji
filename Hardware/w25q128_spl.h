@@ -3,7 +3,7 @@
 
 #include "stm32f10x.h"
 
-/* --- √¸¡Ó --- */
+/* --- ÂëΩ‰ª§ --- */
 #define W25Q_CMD_READ_ID         0x9F
 #define W25Q_CMD_READ_DATA       0x03
 #define W25Q_CMD_FAST_READ       0x0B
@@ -15,11 +15,11 @@
 #define W25Q_CMD_READ_SR1        0x05
 #define W25Q_CMD_WRITE_DISABLE   0x04
 
-/* --- ≥£¡ø --- */
+/* --- Â∏∏Èáè --- */
 #define W25Q_PAGE_SIZE           256
 #define W25Q_SECTOR_SIZE         (4*1024)
 
-/* --- “˝Ω≈£®PB12~PB15 -> SPI2£© --- */
+/* --- ÂºïËÑöÔºàPB12~PB15 -> SPI2Ôºâ --- */
 #define W25Q_CS_PORT             GPIOB
 #define W25Q_CS_PIN              GPIO_Pin_12
 
@@ -27,7 +27,7 @@
 #define W25Q_CS_HIGH()           GPIO_SetBits(W25Q_CS_PORT, W25Q_CS_PIN)
 
 /* API */
-void    W25Q_SPI2_Init(void);                    //  πƒ‹ ±÷”+GPIO+SPI2≈‰÷√
+void    W25Q_SPI2_Init(void);                    // ‰ΩøËÉΩÊó∂Èíü+GPIO+SPI2ÈÖçÁΩÆ
 uint8_t W25Q_ReadSR1(void);
 void    W25Q_WriteEnable(void);
 void    W25Q_WaitBusy(void);

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "rc522.h"
 
-/* ¸ß²ã·â×°·µ»ØÂë£¨Óëµ×²ãÒ»ÖÂµÄÓïÒå£© */
+/* é«˜å±‚å°è£…è¿”å›ç ï¼ˆä¸åº•å±‚ä¸€è‡´çš„è¯­ä¹‰ï¼‰ */
 #define RC522_CARD_OK   0U
 #define RC522_CARD_ERR  1U
 
@@ -12,16 +12,16 @@
 
 void RC522_BeginNewSession(void);
 
-/* ÉèÖÃ¶ÁĞ´Ê¹ÓÃµÄ KeyA£¨Ä¬ÈÏ FF FF FF FF FF FF£© */
+/* è®¾ç½®è¯»å†™ä½¿ç”¨çš„ KeyAï¼ˆé»˜è®¤ FF FF FF FF FF FFï¼‰ */
 void RC522_SetKeyA(const uint8_t keyA[6]);
 
-/* Ñ°¿¨£º³É¹¦·µ»Ø RC522_CARD_OK£¬uid[0..3] ·µ»Ø 4 ×Ö½Ú UID */
+/* å¯»å¡ï¼šæˆåŠŸè¿”å› RC522_CARD_OKï¼Œuid[0..3] è¿”å› 4 å­—èŠ‚ UID */
 uint8_t RC522_Search(uint8_t uid[4]);
 
-/* ¶ÁÈ¡£ºsector ¡Ê [0..15]£¬blockInSector ¡Ê [0..3]£¬recvData ±ØĞë¿ÉĞ´Èë 16 ×Ö½Ú */
+/* è¯»å–ï¼šsector âˆˆ [0..15]ï¼ŒblockInSector âˆˆ [0..3]ï¼ŒrecvData å¿…é¡»å¯å†™å…¥ 16 å­—èŠ‚ */
 uint8_t RC522_ReadBlock(uint8_t sector, uint8_t blockInSector, uint8_t recvData[16]);
 
-/* Ğ´Èë£ºsector ¡Ê [0..15]£¬blockInSector ¡Ê [0..3]£¬writeData ±ØĞëÎª 16 ×Ö½Ú */
+/* å†™å…¥ï¼šsector âˆˆ [0..15]ï¼ŒblockInSector âˆˆ [0..3]ï¼ŒwriteData å¿…é¡»ä¸º 16 å­—èŠ‚ */
 uint8_t RC522_WriteBlock(uint8_t sector, uint8_t blockInSector, const uint8_t writeData[16]);
 
 

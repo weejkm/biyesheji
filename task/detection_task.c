@@ -23,7 +23,7 @@ void Detection_Task(void *pvParameters)
         DHT11_Read_Data(&dev_dht11);
 		xTaskResumeAll();
 
-        if (g_online_mode && g_mqtt_pub_q)//ÅÐ¶ÏÄ£Ê½ºÍÏûÏ¢¶ÓÁÐÓÐÃ»ÓÐ´«Êý¾Ý¹ýÀ´
+        if (g_online_mode && g_mqtt_pub_q)//åˆ¤æ–­æ¨¡å¼å’Œæ¶ˆæ¯é˜Ÿåˆ—æœ‰æ²¡æœ‰ä¼ æ•°æ®è¿‡æ¥
         {
             TickType_t now = xTaskGetTickCount();
             if ((now - last_send_tick) >= pdMS_TO_TICKS(10000))

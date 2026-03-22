@@ -2,7 +2,7 @@
 #include "Delay.h"
 
 //--------------------------------------------------
-// Òı½Å¶¨Òå£ºCS -> PA4, RST -> PB3
+// å¼•è„šå®šä¹‰ï¼šCS -> PA4, RST -> PB3
 //--------------------------------------------------
 #define RC522_CS_LOW()   GPIO_ResetBits(GPIOA, GPIO_Pin_4)
 #define RC522_CS_HIGH()  GPIO_SetBits(GPIOA, GPIO_Pin_4)
@@ -10,18 +10,18 @@
 #define RC522_RST_HIGH() GPIO_SetBits(GPIOB, GPIO_Pin_3)
 
 //--------------------------------------------------
-// ³£Á¿¶¨Òå
+// å¸¸é‡å®šä¹‰
 //--------------------------------------------------
 #define RC522_DEFAULT_TIMEOUT 2000U
 #define RC522_FIFO_SIZE       64U
 
 //--------------------------------------------------
-// ÄÚ²¿º¯ÊıÉùÃ÷
+// å†…éƒ¨å‡½æ•°å£°æ˜
 //--------------------------------------------------
 static uint8_t SPI1_ReadWriteByte(uint8_t TxData);
 
 //--------------------------------------------------
-// ³õÊ¼»¯ SPI1 Óë RC522 Ä£¿é
+// åˆå§‹åŒ– SPI1 ä¸ RC522 æ¨¡å—
 //--------------------------------------------------
 void RC522_SPI_Init(void)
 {
@@ -30,13 +30,13 @@ void RC522_SPI_Init(void)
 
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA |RCC_APB2Periph_GPIOB| RCC_APB2Periph_SPI1, ENABLE);
 
-    // PA5: SCK, PA7: MOSI -> ¸´ÓÃÍÆÍìÊä³ö
+    // PA5: SCK, PA7: MOSI -> å¤ç”¨æ¨æŒ½è¾“å‡º
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_7;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    // PA6: MISO -> ÊäÈë¸¡¿Õ
+    // PA6: MISO -> è¾“å…¥æµ®ç©º
     GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
@@ -46,7 +46,7 @@ void RC522_SPI_Init(void)
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 	
-	//PB3: RST -> ÆÕÍ¨ÍÆÍìÊä³ö
+	//PB3: RST -> æ™®é€šæ¨æŒ½è¾“å‡º
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_3;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -54,7 +54,7 @@ void RC522_SPI_Init(void)
     RC522_CS_HIGH();
     RC522_RST_HIGH();
 
-    // SPI ÅäÖÃ
+    // SPI é…ç½®
     SPI_InitStructure.SPI_Direction = SPI_Direction_2Lines_FullDuplex;
     SPI_InitStructure.SPI_Mode = SPI_Mode_Master;
     SPI_InitStructure.SPI_DataSize = SPI_DataSize_8b;
@@ -67,11 +67,11 @@ void RC522_SPI_Init(void)
     SPI_Init(SPI1, &SPI_InitStructure);
     SPI_Cmd(SPI1, ENABLE);
 
-    // ³õÊ¼»¯ RC522
+    // åˆå§‹åŒ– RC522
     RC522_Reset();
     Delay_ms(50);
 
-    // ¼Ä´æÆ÷ÅäÖÃ
+    // å¯„å­˜å™¨é…ç½®
     RC522_WriteReg(MFRC522_REG_T_MODE, 0x8D);
     RC522_WriteReg(MFRC522_REG_T_PRESCALER, 0x3E);
     RC522_WriteReg(MFRC522_REG_T_RELOAD_L, 30);
@@ -84,7 +84,7 @@ void RC522_SPI_Init(void)
 }
 
 //--------------------------------------------------
-// SPI ¶ÁĞ´Ò»¸ö×Ö½Ú
+// SPI è¯»å†™ä¸€ä¸ªå­—èŠ‚
 //--------------------------------------------------
 static uint8_t SPI1_ReadWriteByte(uint8_t TxData)
 {
@@ -95,7 +95,7 @@ static uint8_t SPI1_ReadWriteByte(uint8_t TxData)
 }
 
 //--------------------------------------------------
-// ¼Ä´æÆ÷²Ù×÷
+// å¯„å­˜å™¨æ“ä½œ
 //--------------------------------------------------
 void RC522_WriteReg(uint8_t addr, uint8_t val)
 {
@@ -128,7 +128,7 @@ void RC522_ClearBitMask(uint8_t reg, uint8_t mask)
 }
 
 //--------------------------------------------------
-// Éè±¸¿ØÖÆ
+// è®¾å¤‡æ§åˆ¶
 //--------------------------------------------------
 void RC522_Reset(void)
 {
@@ -152,100 +152,100 @@ void RC522_AntennaOff(void)
 }
 
 //--------------------------------------------------
-// Í¨ĞÅºËĞÄº¯Êı
+// é€šä¿¡æ ¸å¿ƒå‡½æ•°
 //--------------------------------------------------
 /**
- * º¯ÊıÃû³Æ£ºRC522_ComMF522
- * ¹¦    ÄÜ£ºÏò MFRC522 Ğ¾Æ¬·¢ËÍÃüÁî + Êı¾İ£¬²¢½ÓÊÕ·µ»ØÊı¾İ£¨¶Á¿¨ºËĞÄ£©
- * ²Î    Êı£º
- *    command  ¡ª¡ª ÒªÖ´ĞĞµÄ RC522 ÃüÁî£¨ÈçÈÏÖ¤ÃüÁî¡¢·¢ËÍ/½ÓÊÕÃüÁî£©
- *    sendData ¡ª¡ª ·¢ËÍ¸ø RC522 µÄÊı¾İ»º³åÇø
- *    sendLen  ¡ª¡ª ·¢ËÍÊı¾İ³¤¶È£¨×Ö½Ú£©
- *    backData ¡ª¡ª RC522 »Ø´«µÄÊı¾İ»º³åÇø£¨Êä³ö£©
- *    backLen  ¡ª¡ª RC522 »Ø´«µÄÊı¾İ³¤¶È£¨ÒÔ bit Îªµ¥Î»£©£¨Êä³ö£©
- * ·µ »Ø Öµ£ºMI_OK£¨³É¹¦£©¡¢MI_ERR£¨Ê§°Ü£©¡¢MI_NOTAGERR£¨ÎŞ¿¨»òÎ´ÏìÓ¦£©
+ * å‡½æ•°åç§°ï¼šRC522_ComMF522
+ * åŠŸ    èƒ½ï¼šå‘ MFRC522 èŠ¯ç‰‡å‘é€å‘½ä»¤ + æ•°æ®ï¼Œå¹¶æ¥æ”¶è¿”å›æ•°æ®ï¼ˆè¯»å¡æ ¸å¿ƒï¼‰
+ * å‚    æ•°ï¼š
+ *    command  â€”â€” è¦æ‰§è¡Œçš„ RC522 å‘½ä»¤ï¼ˆå¦‚è®¤è¯å‘½ä»¤ã€å‘é€/æ¥æ”¶å‘½ä»¤ï¼‰
+ *    sendData â€”â€” å‘é€ç»™ RC522 çš„æ•°æ®ç¼“å†²åŒº
+ *    sendLen  â€”â€” å‘é€æ•°æ®é•¿åº¦ï¼ˆå­—èŠ‚ï¼‰
+ *    backData â€”â€” RC522 å›ä¼ çš„æ•°æ®ç¼“å†²åŒºï¼ˆè¾“å‡ºï¼‰
+ *    backLen  â€”â€” RC522 å›ä¼ çš„æ•°æ®é•¿åº¦ï¼ˆä»¥ bit ä¸ºå•ä½ï¼‰ï¼ˆè¾“å‡ºï¼‰
+ * è¿” å› å€¼ï¼šMI_OKï¼ˆæˆåŠŸï¼‰ã€MI_ERRï¼ˆå¤±è´¥ï¼‰ã€MI_NOTAGERRï¼ˆæ— å¡æˆ–æœªå“åº”ï¼‰
  */
 uint8_t RC522_ComMF522(uint8_t command, uint8_t *sendData, uint8_t sendLen,
                        uint8_t *backData, uint16_t *backLen)
 {
-    uint8_t status = MI_ERR;   // Ä¬ÈÏ×´Ì¬£º´íÎó
-    uint8_t irqEn = 0x00;      // ÖĞ¶ÏÔÊĞí¼Ä´æÆ÷ÄÚÈİ
-    uint8_t waitIRq = 0x00;    // µÈ´ıµÄÖĞ¶Ï±êÖ¾
-    uint8_t lastBits;          // ×îºó²»×ã 8 bit µÄÎ»Êı
+    uint8_t status = MI_ERR;   // é»˜è®¤çŠ¶æ€ï¼šé”™è¯¯
+    uint8_t irqEn = 0x00;      // ä¸­æ–­å…è®¸å¯„å­˜å™¨å†…å®¹
+    uint8_t waitIRq = 0x00;    // ç­‰å¾…çš„ä¸­æ–­æ ‡å¿—
+    uint8_t lastBits;          // æœ€åä¸è¶³ 8 bit çš„ä½æ•°
     uint8_t n;
     uint16_t i;
 
-    /* Ñ¡ÔñÃüÁîºó£¬ÒªÉèÖÃ MFRC522 µÄÖĞ¶ÏÑÚÂëÓëµÈ´ı±êÖ¾ */
+    /* é€‰æ‹©å‘½ä»¤åï¼Œè¦è®¾ç½® MFRC522 çš„ä¸­æ–­æ©ç ä¸ç­‰å¾…æ ‡å¿— */
     switch (command)
     {
-        case PCD_AUTHENT:      // ÑéÖ¤ÃÜÔ¿ÃüÁî£¨ÈÏÖ¤£©
-            irqEn = 0x12;      // ÔÊĞíµÄÖĞ¶Ï£ºErrIEn + TimerIEn
-            waitIRq = 0x10;    // µÈ´ıµÄÖĞ¶Ï£ºIdleIRq
+        case PCD_AUTHENT:      // éªŒè¯å¯†é’¥å‘½ä»¤ï¼ˆè®¤è¯ï¼‰
+            irqEn = 0x12;      // å…è®¸çš„ä¸­æ–­ï¼šErrIEn + TimerIEn
+            waitIRq = 0x10;    // ç­‰å¾…çš„ä¸­æ–­ï¼šIdleIRq
             break;
 
-        case PCD_TRANSCEIVE:   // ·¢ËÍ²¢½ÓÊÕ£¨ÓÃÓÚ¶Á¿¨£©
-            irqEn = 0x77;      // ¿ªÆôËùÓĞÏà¹ØÖĞ¶Ï
-            waitIRq = 0x30;    // µÈ´ı RxIRq »ò IdleIRq
+        case PCD_TRANSCEIVE:   // å‘é€å¹¶æ¥æ”¶ï¼ˆç”¨äºè¯»å¡ï¼‰
+            irqEn = 0x77;      // å¼€å¯æ‰€æœ‰ç›¸å…³ä¸­æ–­
+            waitIRq = 0x30;    // ç­‰å¾… RxIRq æˆ– IdleIRq
             break;
     }
 
-    /* ÆôÓÃÖĞ¶Ï£¨CommIEn£©²¢ÉèÖÃÈ«¾ÖÖĞ¶ÏÎ»£¨7 ¸öÖĞ¶Ï£© */
+    /* å¯ç”¨ä¸­æ–­ï¼ˆCommIEnï¼‰å¹¶è®¾ç½®å…¨å±€ä¸­æ–­ä½ï¼ˆ7 ä¸ªä¸­æ–­ï¼‰ */
     RC522_WriteReg(MFRC522_REG_COMM_IE_N, irqEn | 0x80);
 
-    /* Çå³ıËùÓĞÖĞ¶Ï±êÖ¾ */
+    /* æ¸…é™¤æ‰€æœ‰ä¸­æ–­æ ‡å¿— */
     RC522_ClearBitMask(MFRC522_REG_COMM_IRQ, 0x80);
 
-    /* FIFO Çå¿Õ */
+    /* FIFO æ¸…ç©º */
     RC522_SetBitMask(MFRC522_REG_FIFO_LEVEL, 0x80);
 
-    /* ½øÈë Idle Ä£Ê½£¬×¼±¸·¢ËÍÃüÁî */
+    /* è¿›å…¥ Idle æ¨¡å¼ï¼Œå‡†å¤‡å‘é€å‘½ä»¤ */
     RC522_WriteReg(MFRC522_REG_COMMAND, PCD_IDLE);
 
-    /* ½« sendData Ğ´Èë FIFO */
+    /* å°† sendData å†™å…¥ FIFO */
     for (i = 0; i < sendLen; i++)
         RC522_WriteReg(MFRC522_REG_FIFO_DATA, sendData[i]);
 
-    /* Ö´ĞĞÃüÁî£¨PCD_AUTHENT »ò PCD_TRANSCEIVE£© */
+    /* æ‰§è¡Œå‘½ä»¤ï¼ˆPCD_AUTHENT æˆ– PCD_TRANSCEIVEï¼‰ */
     RC522_WriteReg(MFRC522_REG_COMMAND, command);
 
     if (command == PCD_TRANSCEIVE)
-        RC522_SetBitMask(MFRC522_REG_BIT_FRAMING, 0x80);  // Æô¶¯·¢ËÍ
+        RC522_SetBitMask(MFRC522_REG_BIT_FRAMING, 0x80);  // å¯åŠ¨å‘é€
 
-    /* ×ÔĞıµÈ´ıÃüÁîÍê³É£¨´ø³¬Ê±»úÖÆ£© */
+    /* è‡ªæ—‹ç­‰å¾…å‘½ä»¤å®Œæˆï¼ˆå¸¦è¶…æ—¶æœºåˆ¶ï¼‰ */
     i = RC522_DEFAULT_TIMEOUT;
     do
     {
-        n = RC522_ReadReg(MFRC522_REG_COMM_IRQ);    // ¶ÁÈ¡ÖĞ¶Ï±êÖ¾¼Ä´æÆ÷
+        n = RC522_ReadReg(MFRC522_REG_COMM_IRQ);    // è¯»å–ä¸­æ–­æ ‡å¿—å¯„å­˜å™¨
         i--;
     } while ((i != 0) && !(n & 0x01) && !(n & waitIRq));
-    // Ìõ¼şËµÃ÷£º
-    // i != 0          ¡ú Ã»³¬Ê±
-    // !(n & 0x01)     ¡ú TimerIRq Î´´¥·¢£¨Î´³¬Ê±£©
-    // !(n & waitIRq)  ¡ú ÒªµÈ´ıµÄÖĞ¶ÏÎ´´¥·¢£¨Î´Íê³É£©
+    // æ¡ä»¶è¯´æ˜ï¼š
+    // i != 0          â†’ æ²¡è¶…æ—¶
+    // !(n & 0x01)     â†’ TimerIRq æœªè§¦å‘ï¼ˆæœªè¶…æ—¶ï¼‰
+    // !(n & waitIRq)  â†’ è¦ç­‰å¾…çš„ä¸­æ–­æœªè§¦å‘ï¼ˆæœªå®Œæˆï¼‰
 
-    /* Çå³ı×Ô¶¯·¢ËÍÎ» */
+    /* æ¸…é™¤è‡ªåŠ¨å‘é€ä½ */
     RC522_ClearBitMask(MFRC522_REG_BIT_FRAMING, 0x80);
 
-    /* Èç¹ûÃ»ÓĞ³¬Ê± */
+    /* å¦‚æœæ²¡æœ‰è¶…æ—¶ */
     if (i != 0)
     {
-        /* ¼ì²éÊÇ·ñ·¢Éú´íÎó */
+        /* æ£€æŸ¥æ˜¯å¦å‘ç”Ÿé”™è¯¯ */
         if (!(RC522_ReadReg(MFRC522_REG_ERROR) & 0x1B))
         {
             status = MI_OK;
 
-            /* Èç¹ûÊÇ Idle ×´Ì¬£¬Ôò±íÊ¾Ã»ÓĞ¿¨ÏìÓ¦ */
+            /* å¦‚æœæ˜¯ Idle çŠ¶æ€ï¼Œåˆ™è¡¨ç¤ºæ²¡æœ‰å¡å“åº” */
             if (n & irqEn & 0x01)
                 status = MI_NOTAGERR;
 
-            /* Èç¹ûÊÇ·¢ËÍ+½ÓÊÕÖ¸Áî£¬ĞèÒª¶ÁÈ¡½ÓÊÕµ½µÄÊı¾İ */
+            /* å¦‚æœæ˜¯å‘é€+æ¥æ”¶æŒ‡ä»¤ï¼Œéœ€è¦è¯»å–æ¥æ”¶åˆ°çš„æ•°æ® */
             if (command == PCD_TRANSCEIVE)
             {
-                n = RC522_ReadReg(MFRC522_REG_FIFO_LEVEL);   // FIFO ÖĞµÄ×Ö½ÚÊıÁ¿
-                lastBits = RC522_ReadReg(MFRC522_REG_CONTROL) & 0x07; // ×îºóÒ»¸ö×Ö½ÚµÄÓĞĞ§Î»Êı
+                n = RC522_ReadReg(MFRC522_REG_FIFO_LEVEL);   // FIFO ä¸­çš„å­—èŠ‚æ•°é‡
+                lastBits = RC522_ReadReg(MFRC522_REG_CONTROL) & 0x07; // æœ€åä¸€ä¸ªå­—èŠ‚çš„æœ‰æ•ˆä½æ•°
 
                 if (lastBits)
-                    *backLen = (n - 1) * 8 + lastBits;   // ×Ü bit Êı
+                    *backLen = (n - 1) * 8 + lastBits;   // æ€» bit æ•°
                 else
                     *backLen = n * 8;
 
@@ -253,15 +253,15 @@ uint8_t RC522_ComMF522(uint8_t command, uint8_t *sendData, uint8_t sendLen,
                     n = 1;
 
                 if (n > 16)
-                    n = 16; // FIFO ×î¶à´æ 16 ×Ö½Ú
+                    n = 16; // FIFO æœ€å¤šå­˜ 16 å­—èŠ‚
 
-                /* ¶ÁÈ¡ FIFO Êı¾İÊä³ö */
+                /* è¯»å– FIFO æ•°æ®è¾“å‡º */
                 for (i = 0; i < n; i++)
                     backData[i] = RC522_ReadReg(MFRC522_REG_FIFO_DATA);
             }
         }
         else
-            status = MI_ERR; // ·¢ÉúÓ²¼ş´íÎó
+            status = MI_ERR; // å‘ç”Ÿç¡¬ä»¶é”™è¯¯
     }
 
     return status;
@@ -269,7 +269,7 @@ uint8_t RC522_ComMF522(uint8_t command, uint8_t *sendData, uint8_t sendLen,
 
 
 //--------------------------------------------------
-// ¿¨Æ¬²Ù×÷º¯Êı
+// å¡ç‰‡æ“ä½œå‡½æ•°
 //--------------------------------------------------
 uint8_t RC522_Request(uint8_t reqMode, uint8_t *TagType)
 {
@@ -346,11 +346,11 @@ uint8_t RC522_Check(uint8_t *id)
 }
 
 //--------------------------------------------------
-// CRC Óë HALT
+// CRC ä¸ HALT
 //--------------------------------------------------
 void RC522_CalculateCRC(uint8_t *pIndata, uint8_t len, uint8_t *pOutData)
 {
-    uint16_t i;    // ¸ÄÎª uint16_t£¬±ÜÃâ 0x7FF ½Ø¶Ï
+    uint16_t i;    // æ”¹ä¸º uint16_tï¼Œé¿å… 0x7FF æˆªæ–­
     uint8_t n;
 
     RC522_WriteReg(MFRC522_REG_COMMAND, PCD_IDLE);

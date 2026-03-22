@@ -5,60 +5,60 @@
 #include <stdbool.h>
 
 /**
- * @brief  ´ÓÒ»¶Î JSON ÎÄ±¾ÖĞ¶ÁÈ¡ int
- * @param  json    JSON ×Ö·û´®£¨±ØĞëÊÇÒÔ \0 ½áÎ²£©
- * @param  key     Òª²éÕÒµÄ¼üÃû£¬²»´øÒıºÅ£¬±ÈÈç "cmd"
- * @param  out     Êä³öµÄÕûÊıÖ¸Õë
- * @return true ³É¹¦ÕÒµ½²¢½âÎö£¬false Î´ÕÒµ½»ò¸ñÊ½´íÎó
+ * @brief  ä»ä¸€æ®µ JSON æ–‡æœ¬ä¸­è¯»å– int
+ * @param  json    JSON å­—ç¬¦ä¸²ï¼ˆå¿…é¡»æ˜¯ä»¥ \0 ç»“å°¾ï¼‰
+ * @param  key     è¦æŸ¥æ‰¾çš„é”®åï¼Œä¸å¸¦å¼•å·ï¼Œæ¯”å¦‚ "cmd"
+ * @param  out     è¾“å‡ºçš„æ•´æ•°æŒ‡é’ˆ
+ * @return true æˆåŠŸæ‰¾åˆ°å¹¶è§£æï¼Œfalse æœªæ‰¾åˆ°æˆ–æ ¼å¼é”™è¯¯
  */
 bool JSON_GetInt(const char *json, const char *key, int *out);
 
 /**
- * @brief  ´ÓÒ»¶Î JSON ÎÄ±¾ÖĞ¶ÁÈ¡ float
- * @param  json    JSON ×Ö·û´®
- * @param  key     ¼üÃû
- * @param  out     Êä³öµÄ float Ö¸Õë
- * @return true ³É¹¦£¬false Ê§°Ü
+ * @brief  ä»ä¸€æ®µ JSON æ–‡æœ¬ä¸­è¯»å– float
+ * @param  json    JSON å­—ç¬¦ä¸²
+ * @param  key     é”®å
+ * @param  out     è¾“å‡ºçš„ float æŒ‡é’ˆ
+ * @return true æˆåŠŸï¼Œfalse å¤±è´¥
  */
 bool JSON_GetFloat(const char *json, const char *key, float *out);
 
 /**
- * @brief  ´ÓÒ»¶Î JSON ÎÄ±¾ÖĞ¶ÁÈ¡ bool
- * @param  json    JSON ×Ö·û´®
- * @param  key     ¼üÃû
- * @param  out     Êä³öµÄ bool Ö¸Õë
- * @return true ³É¹¦£¬false Ê§°Ü
+ * @brief  ä»ä¸€æ®µ JSON æ–‡æœ¬ä¸­è¯»å– bool
+ * @param  json    JSON å­—ç¬¦ä¸²
+ * @param  key     é”®å
+ * @param  out     è¾“å‡ºçš„ bool æŒ‡é’ˆ
+ * @return true æˆåŠŸï¼Œfalse å¤±è´¥
  */
 bool JSON_GetBool(const char *json, const char *key, bool *out);
 
 /**
- * @brief  ´ÓÒ»¶Î JSON ÎÄ±¾ÖĞ¶ÁÈ¡×Ö·û´®
- * @param  json    JSON ×Ö·û´®
- * @param  key     ¼üÃû
- * @param  out     Êä³ö»º³åÇø
- * @param  out_sz  Êä³ö»º³åÇø´óĞ¡£¨×Ö½Ú£©
- * @return true ³É¹¦£¬false Ê§°Ü
+ * @brief  ä»ä¸€æ®µ JSON æ–‡æœ¬ä¸­è¯»å–å­—ç¬¦ä¸²
+ * @param  json    JSON å­—ç¬¦ä¸²
+ * @param  key     é”®å
+ * @param  out     è¾“å‡ºç¼“å†²åŒº
+ * @param  out_sz  è¾“å‡ºç¼“å†²åŒºå¤§å°ï¼ˆå­—èŠ‚ï¼‰
+ * @return true æˆåŠŸï¼Œfalse å¤±è´¥
  */
 bool JSON_GetString(const char *json, const char *key,
                     char *out, uint16_t out_sz);
 
 /**
- * @brief  ÅĞ¶Ï JSON ÖĞÊÇ·ñ´æÔÚÄ³¸ö key£¨²»¹ØĞÄÖµÀàĞÍ£©
- * @param  json    JSON ×Ö·û´®
- * @param  key     ¼üÃû
- * @return true ´æÔÚ£¬false ²»´æÔÚ
+ * @brief  åˆ¤æ–­ JSON ä¸­æ˜¯å¦å­˜åœ¨æŸä¸ª keyï¼ˆä¸å…³å¿ƒå€¼ç±»å‹ï¼‰
+ * @param  json    JSON å­—ç¬¦ä¸²
+ * @param  key     é”®å
+ * @return true å­˜åœ¨ï¼Œfalse ä¸å­˜åœ¨
  */
 bool JSON_HasKey(const char *json, const char *key);
 
 /**
- * @brief  È¡µÃÄ³¸ö key ¶ÔÓ¦µÄ¡°Ô­Ê¼Öµ×Ö·û´®¡±£¨²»È¥µôÒıºÅ£©
- *         ±ÈÈç "cmd":123  -> valueStr="123"
+ * @brief  å–å¾—æŸä¸ª key å¯¹åº”çš„â€œåŸå§‹å€¼å­—ç¬¦ä¸²â€ï¼ˆä¸å»æ‰å¼•å·ï¼‰
+ *         æ¯”å¦‚ "cmd":123  -> valueStr="123"
  *              "msg":"hi" -> valueStr="\"hi\""
- * @param  json      JSON ×Ö·û´®
- * @param  key       ¼üÃû
- * @param  out       Êä³ö»º³åÇø
- * @param  out_sz    »º³åÇø´óĞ¡
- * @return true ³É¹¦£¬false Ê§°Ü
+ * @param  json      JSON å­—ç¬¦ä¸²
+ * @param  key       é”®å
+ * @param  out       è¾“å‡ºç¼“å†²åŒº
+ * @param  out_sz    ç¼“å†²åŒºå¤§å°
+ * @return true æˆåŠŸï¼Œfalse å¤±è´¥
  */
 bool JSON_GetRaw(const char *json, const char *key,
                  char *out, uint16_t out_sz);

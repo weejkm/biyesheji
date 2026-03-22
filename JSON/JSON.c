@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Ìø¹ı¿Õ°××Ö·û */
+/* è·³è¿‡ç©ºç™½å­—ç¬¦ */
 static const char* json_skip_ws(const char *p)
 {
     while (*p == ' ' || *p == '\t' || *p == '\r' || *p == '\n')
@@ -11,40 +11,40 @@ static const char* json_skip_ws(const char *p)
 }
 
 /**
- * ÔÚ JSON ÎÄ±¾ÖĞÕÒµ½Ö¸¶¨ key ºóÃæµÄ value ÆğÊ¼Ö¸Õë
- * Àı£º{"cmd":123,"msg":"ok"}
- *     JSON_FindKeyValue(json, "cmd") -> Ö¸Ïò '1'
- *     JSON_FindKeyValue(json, "msg") -> Ö¸Ïò '"'
+ * åœ¨ JSON æ–‡æœ¬ä¸­æ‰¾åˆ°æŒ‡å®š key åé¢çš„ value èµ·å§‹æŒ‡é’ˆ
+ * ä¾‹ï¼š{"cmd":123,"msg":"ok"}
+ *     JSON_FindKeyValue(json, "cmd") -> æŒ‡å‘ '1'
+ *     JSON_FindKeyValue(json, "msg") -> æŒ‡å‘ '"'
  */
 static const char* json_find_key_value(const char *json, const char *key)
 {
     if (!json || !key) return NULL;
 
-    /* ¹¹ÔìÆ¥ÅäÄ£Ê½£º"key" */
+    /* æ„é€ åŒ¹é…æ¨¡å¼ï¼š"key" */
     char pattern[64];
     size_t key_len = strlen(key);
-    if (key_len > 50) return NULL;   // ·ÀÓùĞÔ£¬±ÜÃâ pattern Ì«³¤
+    if (key_len > 50) return NULL;   // é˜²å¾¡æ€§ï¼Œé¿å… pattern å¤ªé•¿
 
     pattern[0] = '"';
     memcpy(&pattern[1], key, key_len);
     pattern[1 + key_len] = '"';
     pattern[2 + key_len] = '\0';
 
-    /* ÔÚ json ÀïËÑË÷ "key" */
+    /* åœ¨ json é‡Œæœç´¢ "key" */
     const char *p = json;
     while ((p = strstr(p, pattern)) != NULL)
     {
-        p += strlen(pattern);  // Ìøµ½ "key" ºóÃæ
+        p += strlen(pattern);  // è·³åˆ° "key" åé¢
 
         p = json_skip_ws(p);
         if (*p != ':')
         {
-            // ÓĞ¿ÉÄÜÊÇ±ğµÄÉÏÏÂÎÄÀïµÄ "key"£¬¼ÌĞøÕÒ
+            // æœ‰å¯èƒ½æ˜¯åˆ«çš„ä¸Šä¸‹æ–‡é‡Œçš„ "key"ï¼Œç»§ç»­æ‰¾
             continue;
         }
-        p++;  // Ìø¹ı ':'
+        p++;  // è·³è¿‡ ':'
         p = json_skip_ws(p);
-        return p;  // ÕâÀï¾ÍÊÇÖµµÄÆğÊ¼
+        return p;  // è¿™é‡Œå°±æ˜¯å€¼çš„èµ·å§‹
     }
 
     return NULL;
@@ -62,10 +62,10 @@ bool JSON_GetInt(const char *json, const char *key, int *out)
     const char *p = json_find_key_value(json, key);
     if (!p) return false;
 
-    /* ÔÊĞíÇ°ÃæÓĞ + »ò - ºÅ */
+    /* å…è®¸å‰é¢æœ‰ + æˆ– - å· */
     char *endptr;
     long v = strtol(p, &endptr, 10);
-    if (endptr == p)  // Ã»ÓĞÈÎºÎÊı×Ö
+    if (endptr == p)  // æ²¡æœ‰ä»»ä½•æ•°å­—
         return false;
 
     *out = (int)v;
@@ -116,14 +116,14 @@ bool JSON_GetString(const char *json, const char *key,
     const char *p = json_find_key_value(json, key);
     if (!p || *p != '"') return false;
 
-    p++;  // Ìø¹ıµÚÒ»¸öÒıºÅ
+    p++;  // è·³è¿‡ç¬¬ä¸€ä¸ªå¼•å·
 
     uint16_t i = 0;
     while (*p && *p != '"' && i < out_sz - 1)
     {
-        if (*p == '\\' && p[1] != '\0')  // ¼òµ¥´¦Àí×ªÒå£º\x
+        if (*p == '\\' && p[1] != '\0')  // ç®€å•å¤„ç†è½¬ä¹‰ï¼š\x
         {
-            p++; // Ö±½ÓÌø¹ı·´Ğ±¸Ü£¬Ö»¸´ÖÆºóÃæÄÇ¸ö
+            p++; // ç›´æ¥è·³è¿‡åæ–œæ ï¼Œåªå¤åˆ¶åé¢é‚£ä¸ª
         }
         out[i++] = *p++;
     }
@@ -131,7 +131,7 @@ bool JSON_GetString(const char *json, const char *key,
 
     if (*p != '"')
     {
-        // ×Ö·û´®Ã»Õı³£½áÊø
+        // å­—ç¬¦ä¸²æ²¡æ­£å¸¸ç»“æŸ
         return false;
     }
 
@@ -146,19 +146,19 @@ bool JSON_GetRaw(const char *json, const char *key,
     const char *p = json_find_key_value(json, key);
     if (!p) return false;
 
-    /* Èç¹ûÊÇ×Ö·û´®£¬¾Í°üº¬Õû¸ö "xxx" */
+    /* å¦‚æœæ˜¯å­—ç¬¦ä¸²ï¼Œå°±åŒ…å«æ•´ä¸ª "xxx" */
     if (*p == '"')
     {
         const char *start = p;
-        p++; // Ìø¹ı¿ªÍ·ÒıºÅ
+        p++; // è·³è¿‡å¼€å¤´å¼•å·
         while (*p)
         {
             if (*p == '\\' && p[1] != '\0')
             {
-                p += 2; // Ìø¹ı×ªÒå
+                p += 2; // è·³è¿‡è½¬ä¹‰
                 continue;
             }
-            if (*p == '"') // ½áÊøÒıºÅ
+            if (*p == '"') // ç»“æŸå¼•å·
             {
                 p++;
                 break;
@@ -174,7 +174,7 @@ bool JSON_GetRaw(const char *json, const char *key,
     }
     else
     {
-        /* Êı×Ö / ²¼¶û / null µÈ£º¶Áµ½ , »ò } ÎªÖ¹ */
+        /* æ•°å­— / å¸ƒå°” / null ç­‰ï¼šè¯»åˆ° , æˆ– } ä¸ºæ­¢ */
         const char *start = p;
         while (*p &&
                *p != ',' &&
@@ -185,7 +185,7 @@ bool JSON_GetRaw(const char *json, const char *key,
             p++;
         }
 
-        /* È¥µôÄ©Î²¿ÉÄÜµÄ¿Õ°× */
+        /* å»æ‰æœ«å°¾å¯èƒ½çš„ç©ºç™½ */
         const char *end = p;
         while (end > start &&
                (end[-1] == ' ' || end[-1] == '\t'))

@@ -30,7 +30,7 @@ void USART2_IRQHandler(void)
         {
             su_rx_index = 0;
 
-            /* 校验固定帧格式：00 00 00 CMD */
+            /* 鏍￠獙鍥哄畾甯ф牸寮忥細00 00 00 CMD */
             if (su_rx_buf[0] == 0x00 &&
                 su_rx_buf[1] == 0x00 &&
                 su_rx_buf[2] == 0x00)

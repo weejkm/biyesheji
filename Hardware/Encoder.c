@@ -1,48 +1,77 @@
-#include "stm32f10x.h"                  // Device header
+/**
+ ******************************************************************************
+ * @file    Encoder.c
+ * @brief   æ—‹è½¬ç¼–ç å™¨é©±åŠ¨å®ç°æ–‡ä»¶
+ * @details ä½¿ç”¨å¤–éƒ¨ä¸­æ–­æ£€æµ‹ç¼–ç å™¨Aã€Bç›¸çš„è¾¹æ²¿å˜åŒ–
+ *          é€šè¿‡Aã€Bç›¸çš„ç›¸ä½å…³ç³»åˆ¤æ–­æ—‹è½¬æ–¹å‘
+ *          é…ç½®äº†è½¯ä»¶æ¶ˆæŠ–æ—¶é—´ï¼Œæé«˜æ£€æµ‹ç¨³å®šæ€§
+ ******************************************************************************
+ */
+
+#include "stm32f10x.h"
 #include "Encoder.h"
 
-int16_t Encoder_Count = 0;              // È«¾Ö±äÁ¿£¬ÓÃÓÚ¼ÆÊıĞı×ª±àÂëÆ÷µÄÔöÁ¿Öµ
+// ==================== å…¨å±€å˜é‡å®šä¹‰ ====================
 
 /**
-  * @brief  ¼òµ¥ÑÓÊ±º¯Êı£¨Ô¼¼¸Î¢Ãë¼¶£©
-  * @param  n Ñ­»·´ÎÊı£¨ÊıÖµÔ½´óÑÓÊ±Ô½³¤£©
-  */
+ * @brief å…¨å±€å˜é‡è®¡æ•°ï¼Œç”¨äºè®¡æ—‹è½¬ç¼–ç å™¨æ—‹è½¬çš„è„‰å†²æ•°
+ * @note æ­£è½¬æ—¶å¢åŠ ï¼Œåè½¬æ—¶å‡å°‘
+ *       è°ƒç”¨Encoder_Getå‡½æ•°ä¼šè¿”å›å½“å‰å€¼å¹¶æ¸…é›¶
+ */
+int16_t Encoder_Count = 0;
+
+// ==================== å†…éƒ¨å‡½æ•° ====================
+
+/**
+ * @brief ç®€å•å»¶æ—¶å‡½æ•°ï¼ˆå¾®ç§’çº§ï¼‰
+ * @param n å¾ªç¯æ¬¡æ•°ï¼Œæ•°å€¼è¶Šå¤§å»¶æ—¶è¶Šé•¿
+ * @note ç”¨äºè½¯ä»¶æ¶ˆæŠ–
+ */
 static void Encoder_Delay(volatile uint16_t n)
 {
     while(n--);
 }
 
+// ==================== ç¼–ç å™¨åˆå§‹åŒ–å‡½æ•° ====================
+
 /**
-  * @brief  Ğı×ª±àÂëÆ÷³õÊ¼»¯
-  */
+ * @brief æ—‹è½¬ç¼–ç å™¨åˆå§‹åŒ–
+ * @details é…ç½®æ­¥éª¤ï¼š
+ *          1. å¼€å¯GPIOBå’ŒAFIOæ—¶é’Ÿ
+ *          2. é…ç½®PB0å’ŒPB1ä¸ºä¸Šæ‹‰è¾“å…¥æ¨¡å¼
+ *          3. é…ç½®AFIOæ˜ å°„ï¼Œå°†PB0ã€PB1è¿æ¥åˆ°EXTI0ã€EXTI1
+ *          4. é…ç½®EXTIä¸ºä¸Šå‡æ²¿å’Œä¸‹é™æ²¿è§¦å‘ä¸­æ–­
+ *          5. é…ç½®NVICä¸­æ–­ä¼˜å…ˆçº§ï¼ˆæŠ¢å ä¼˜å…ˆçº§5ï¼Œå“åº”ä¼˜å…ˆçº§1å’Œ2ï¼‰
+ */
 void Encoder_Init(void)
 {
-    /* ¿ªÆôÊ±ÖÓ */
+    // 1. å¼€å¯æ—¶é’Ÿ
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
 
-    /* GPIO ³õÊ¼»¯ */
+    // 2. GPIO åˆå§‹åŒ–ï¼šé…ç½®PB0å’ŒPB1ä¸ºä¸Šæ‹‰è¾“å…¥
     GPIO_InitTypeDef GPIO_InitStructure;
-    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;        // ä¸Šæ‹‰è¾“å…¥
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1;  // PB0å’ŒPB1
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
 
-    /* AFIO Ó³Éä */
-    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);
-    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource1);
+    // 3. AFIO æ˜ å°„ï¼šå°†GPIOå¼•è„šè¿æ¥åˆ°å¤–éƒ¨ä¸­æ–­çº¿
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);  // PB0 -> EXTI0
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource1);  // PB1 -> EXTI1
 
-    /* EXTI ³õÊ¼»¯ */
+    // 4. EXTI åˆå§‹åŒ–ï¼šé…ç½®ä¸ºä¸Šå‡æ²¿å’Œä¸‹é™æ²¿è§¦å‘
     EXTI_InitTypeDef EXTI_InitStructure;
     EXTI_InitStructure.EXTI_Line = EXTI_Line0 | EXTI_Line1;
     EXTI_InitStructure.EXTI_LineCmd = ENABLE;
     EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling; // Ë«ÑØ´¥·¢
+    EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;  // åŒè¾¹æ²¿è§¦å‘
     EXTI_Init(&EXTI_InitStructure);
 
-    /* NVIC ·Ö×éÓëÓÅÏÈ¼¶ÅäÖÃ */
+    // 5. NVIC é…ç½®ä¸­æ–­ä¼˜å…ˆçº§åˆ†ç»„
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 
+    // é…ç½®EXTI0ä¸­æ–­
     NVIC_InitTypeDef NVIC_InitStructure;
     NVIC_InitStructure.NVIC_IRQChannel = EXTI0_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
@@ -50,6 +79,7 @@ void Encoder_Init(void)
     NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_Init(&NVIC_InitStructure);
 
+    // é…ç½®EXTI1ä¸­æ–­
     NVIC_InitStructure.NVIC_IRQChannel = EXTI1_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 5;
@@ -57,70 +87,85 @@ void Encoder_Init(void)
     NVIC_Init(&NVIC_InitStructure);
 }
 
+// ==================== ç¼–ç å™¨è®¡æ•°å€¼è¯»å–å‡½æ•° ====================
+
 /**
-  * @brief  »ñÈ¡Ğı×ª±àÂëÆ÷ÔöÁ¿Öµ£¨¶ÁÈ¡ºóÇåÁã£©
-  */
+ * @brief è·å–æ—‹è½¬ç¼–ç å™¨çš„è®¡æ•°å€¼ï¼ˆè¯»å–åæ¸…é›¶ï¼‰
+ * @return å½“å‰è®¡æ•°å€¼
+ * @note è¯»å–åä¼šè‡ªåŠ¨æ¸…é›¶è®¡æ•°å™¨
+ *       é€‚åˆç”¨äºè¯»å–æ—‹è½¬å¢é‡
+ */
 int16_t Encoder_Get(void)
 {
     int16_t Temp = Encoder_Count;
-    Encoder_Count = 0;
+    Encoder_Count = 0;  // æ¸…é›¶è®¡æ•°å™¨
     return Temp;
 }
 
+// ==================== EXTI0ä¸­æ–­æœåŠ¡å‡½æ•° (PB0-Aç›¸) ====================
+
 /**
-  * @brief  EXTI0£¨PB0£©ÖĞ¶Ï·şÎñº¯Êı
-  */
+ * @brief EXTI0ï¼ˆPB0-Aç›¸ï¼‰ä¸­æ–­æœåŠ¡å‡½æ•°
+ * @note æ£€æµ‹Aç›¸çš„è¾¹æ²¿å˜åŒ–ï¼Œé€šè¿‡Aã€Bç›¸çš„ç›¸ä½å…³ç³»åˆ¤æ–­æ—‹è½¬æ–¹å‘
+ *      åªåœ¨Aç›¸ä¸‹é™æ²¿æ—¶åˆ¤æ–­ï¼š
+ *      - A=0, B=1: æ­£è½¬ï¼ˆè®¡æ•°+1ï¼‰
+ *      - A=0, B=0: åè½¬ï¼ˆè®¡æ•°-1ï¼‰
+ */
 void EXTI0_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line0) == SET)
     {
-        // ¡¾¹Ø¼üĞŞ¸Ä¡¿Ôö¼ÓÏû¶¶ÑÓÊ±
-        // ÑÓÊ±1-2ºÁÃë£¨¾ßÌåÊıÖµ¿ÉÄÜĞèÒª¸ù¾İÄãµÄ±àÂëÆ÷µ÷Õû£©
-        // ÕâÀïµÄEncoder_Delay(200)¿ÉÄÜÌ«¶ÌÁË£¬ÎÒÃÇ»»Ò»¸ö¸ü³¤µÄ
-        // Äã¿ÉÒÔÊ¹ÓÃSysTick»òÕßÒ»¸ö¼òµ¥µÄforÑ­»·
-        Encoder_Delay(1000); // ÑÓÊ±Ô¼1ms£¬ÆÁ±Î¶¶¶¯
+        // 1. è½¯ä»¶æ¶ˆæŠ–ï¼šå»¶æ—¶çº¦1ms
+        Encoder_Delay(1000);
 
-        // ÖØĞÂ¶ÁÈ¡ÎÈ¶¨ºóµÄµçÆ½
+        // 2. å†æ¬¡è¯»å–ç¨³å®šçš„ç”µå¹³
         uint8_t A = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);
         uint8_t B = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1);
 
-        // ¡¾¹Ø¼üĞŞ¸Ä¡¿Ö»ÅĞ¶ÏÒ»¸ö±ßÑØ£¬¼ò»¯Âß¼­
-        // ÎÒÃÇÖ»¹ØĞÄAÏàµÄÏÂ½µÑØ
-        if (A == 0) 
+        // 3. åªåˆ¤æ–­Aç›¸ä¸ºä¸‹é™æ²¿çš„æƒ…å†µ
+        if (A == 0)
         {
             if (B == 1)
-                Encoder_Count++;  // AÏÂ½µÑØ£¬BÎª¸ß£¬Õı×ª
+                Encoder_Count++;  // Aä¸‹é™æ²¿ï¼ŒBä¸ºé«˜ï¼Œæ­£è½¬
             else
-                Encoder_Count--;  // AÏÂ½µÑØ£¬BÎªµÍ£¬·´×ª
+                Encoder_Count--;  // Aä¸‹é™æ²¿ï¼ŒBä¸ºä½ï¼Œåè½¬
         }
 
+        // 4. æ¸…é™¤ä¸­æ–­æ ‡å¿—
         EXTI_ClearITPendingBit(EXTI_Line0);
     }
 }
 
+// ==================== EXTI1ä¸­æ–­æœåŠ¡å‡½æ•° (PB1-Bç›¸) ====================
+
 /**
-  * @brief  EXTI1£¨PB1£©ÖĞ¶Ï·şÎñº¯Êı
-  */
+ * @brief EXTI1ï¼ˆPB1-Bç›¸ï¼‰ä¸­æ–­æœåŠ¡å‡½æ•°
+ * @note æ£€æµ‹Bç›¸çš„è¾¹æ²¿å˜åŒ–ï¼Œé€šè¿‡Aã€Bç›¸çš„ç›¸ä½å…³ç³»åˆ¤æ–­æ—‹è½¬æ–¹å‘
+ *      åªåœ¨Bç›¸ä¸‹é™æ²¿æ—¶åˆ¤æ–­ï¼š
+ *      - B=0, A=0: æ­£è½¬ï¼ˆè®¡æ•°+1ï¼‰
+ *      - B=0, A=1: åè½¬ï¼ˆè®¡æ•°-1ï¼‰
+ */
 void EXTI1_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line1) == SET)
     {
-        // ¡¾¹Ø¼üĞŞ¸Ä¡¿Ôö¼ÓÏû¶¶ÑÓÊ±
-        Encoder_Delay(1000); // ÑÓÊ±Ô¼1ms
+        // 1. è½¯ä»¶æ¶ˆæŠ–ï¼šå»¶æ—¶çº¦1ms
+        Encoder_Delay(1000);
 
+        // 2. è¯»å–ç”µå¹³
         uint8_t A = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0);
         uint8_t B = GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1);
 
-        // ¡¾¹Ø¼üĞŞ¸Ä¡¿Ö»ÅĞ¶ÏÒ»¸ö±ßÑØ
-        // ÎÒÃÇÖ»¹ØĞÄBÏàµÄÏÂ½µÑØ
-        if (B == 0) 
+        // 3. åªåˆ¤æ–­Bç›¸ä¸ºä¸‹é™æ²¿çš„æƒ…å†µ
+        if (B == 0)
         {
             if (A == 0)
-                Encoder_Count++;  // BÏÂ½µÑØ£¬AÎªµÍ£¬Õı×ª
+                Encoder_Count++;  // Bä¸‹é™æ²¿ï¼ŒAä¸ºä½ï¼Œæ­£è½¬
             else
-                Encoder_Count--;  // BÏÂ½µÑØ£¬AÎª¸ß£¬·´×ª
+                Encoder_Count--;  // Bä¸‹é™æ²¿ï¼ŒAä¸ºé«˜ï¼Œåè½¬
         }
 
+        // 4. æ¸…é™¤ä¸­æ–­æ ‡å¿—
         EXTI_ClearITPendingBit(EXTI_Line1);
     }
 }

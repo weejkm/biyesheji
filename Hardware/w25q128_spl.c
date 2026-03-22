@@ -3,101 +3,101 @@
 
 
 
-/* ===================== SPI »ù´¡ÊÕ·¢ ===================== */
+/* ===================== SPI åŸºç¡€æ”¶å‘ ===================== */
 /**
- * @brief Í¨¹ı SPI2 ·¢ËÍ²¢½ÓÊÕÒ»¸ö×Ö½Ú
- * @param data ´ı·¢ËÍµÄÊı¾İ
- * @return ½ÓÊÕµ½µÄÊı¾İ
+ * @brief é€šè¿‡ SPI2 å‘é€å¹¶æ¥æ”¶ä¸€ä¸ªå­—èŠ‚
+ * @param data å¾…å‘é€çš„æ•°æ®
+ * @return æ¥æ”¶åˆ°çš„æ•°æ®
  */
 static uint8_t SPI2_TransferByte(uint8_t data)
 {
-    /* µÈ´ı·¢ËÍ»º³åÇø¿Õ */
+    /* ç­‰å¾…å‘é€ç¼“å†²åŒºç©º */
     while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_TXE) == RESET);
-    /* ·¢ËÍÊı¾İ */
+    /* å‘é€æ•°æ® */
     SPI_I2S_SendData(SPI2, data);
-    /* µÈ´ı½ÓÊÕ»º³åÇøÂú */
+    /* ç­‰å¾…æ¥æ”¶ç¼“å†²åŒºæ»¡ */
     while (SPI_I2S_GetFlagStatus(SPI2, SPI_I2S_FLAG_RXNE) == RESET);
-    /* ·µ»Ø½ÓÊÕµ½µÄÊı¾İ */
+    /* è¿”å›æ¥æ”¶åˆ°çš„æ•°æ® */
     return (uint8_t)SPI_I2S_ReceiveData(SPI2);
 }
 
-/* ===================== ÍâÉèÓë GPIO ³õÊ¼»¯ ===================== */
+/* ===================== å¤–è®¾ä¸ GPIO åˆå§‹åŒ– ===================== */
 /**
- * @brief ³õÊ¼»¯ SPI2 ºÍÏà¹Ø GPIO Òı½Å£¬ÓÃÓÚÇı¶¯ W25Q128
+ * @brief åˆå§‹åŒ– SPI2 å’Œç›¸å…³ GPIO å¼•è„šï¼Œç”¨äºé©±åŠ¨ W25Q128
  * 
- * Ó²¼şÁ¬½Ó£º
- *   PB12 -> CS£¨Æ¬Ñ¡£©
- *   PB13 -> SCK£¨Ê±ÖÓ£©
- *   PB14 -> MISO£¨Ö÷»úÊäÈë£¬´Ó»úÊä³ö£©
- *   PB15 -> MOSI£¨Ö÷»úÊä³ö£¬´Ó»úÊäÈë£©
+ * ç¡¬ä»¶è¿æ¥ï¼š
+ *   PB12 -> CSï¼ˆç‰‡é€‰ï¼‰
+ *   PB13 -> SCKï¼ˆæ—¶é’Ÿï¼‰
+ *   PB14 -> MISOï¼ˆä¸»æœºè¾“å…¥ï¼Œä»æœºè¾“å‡ºï¼‰
+ *   PB15 -> MOSIï¼ˆä¸»æœºè¾“å‡ºï¼Œä»æœºè¾“å…¥ï¼‰
  */
 void W25Q_SPI2_Init(void)
 {
-    /* 1. ´ò¿ªÍâÉèÊ±ÖÓ£ºGPIOB (APB2) ºÍ SPI2 (APB1) */
+    /* 1. æ‰“å¼€å¤–è®¾æ—¶é’Ÿï¼šGPIOB (APB2) å’Œ SPI2 (APB1) */
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_SPI2,  ENABLE);
 
     GPIO_InitTypeDef gpio;
     gpio.GPIO_Speed = GPIO_Speed_50MHz;
 
-    /* ÅäÖÃ SCK (PB13) Îª¸´ÓÃÍÆÍìÊä³ö */
+    /* é…ç½® SCK (PB13) ä¸ºå¤ç”¨æ¨æŒ½è¾“å‡º */
     gpio.GPIO_Pin   = GPIO_Pin_13;
     gpio.GPIO_Mode  = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOB, &gpio);
 
-    /* ÅäÖÃ MOSI (PB15) Îª¸´ÓÃÍÆÍìÊä³ö */
+    /* é…ç½® MOSI (PB15) ä¸ºå¤ç”¨æ¨æŒ½è¾“å‡º */
     gpio.GPIO_Pin   = GPIO_Pin_15;
     gpio.GPIO_Mode  = GPIO_Mode_AF_PP;
     GPIO_Init(GPIOB, &gpio);
 
-    /* ÅäÖÃ MISO (PB14) Îª¸¡¿ÕÊäÈë */
+    /* é…ç½® MISO (PB14) ä¸ºæµ®ç©ºè¾“å…¥ */
     gpio.GPIO_Pin   = GPIO_Pin_14;
     gpio.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
     GPIO_Init(GPIOB, &gpio);
 
-    /* ÅäÖÃ CS (PB12) ÎªÍÆÍìÊä³ö£¬²¢Ä¬ÈÏÀ­¸ß£¨½ûÖ¹Ñ¡ÖĞ£© */
+    /* é…ç½® CS (PB12) ä¸ºæ¨æŒ½è¾“å‡ºï¼Œå¹¶é»˜è®¤æ‹‰é«˜ï¼ˆç¦æ­¢é€‰ä¸­ï¼‰ */
     gpio.GPIO_Pin   = GPIO_Pin_12;
     gpio.GPIO_Mode  = GPIO_Mode_Out_PP;
     GPIO_Init(GPIOB, &gpio);
     W25Q_CS_HIGH();
 
-    /* 2. ÅäÖÃ SPI2 */
+    /* 2. é…ç½® SPI2 */
     SPI_InitTypeDef spi;
     SPI_StructInit(&spi);
-    spi.SPI_Direction         = SPI_Direction_2Lines_FullDuplex; // È«Ë«¹¤
-    spi.SPI_Mode              = SPI_Mode_Master;                 // Ö÷»úÄ£Ê½
-    spi.SPI_DataSize          = SPI_DataSize_8b;                 // 8Î»Êı¾İ
-    spi.SPI_CPOL              = SPI_CPOL_Low;                    // ¿ÕÏĞÊ± SCK µÍµçÆ½
-    spi.SPI_CPHA              = SPI_CPHA_1Edge;                  // µÚ1¸öÊ±ÖÓÑØ²ÉÑù
-    spi.SPI_NSS               = SPI_NSS_Soft;                    // Èí¼ş¹ÜÀíÆ¬Ñ¡
-    spi.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;         // ·ÖÆµ 72/8=9MHz
-    spi.SPI_FirstBit          = SPI_FirstBit_MSB;                // ¸ßÎ»ÏÈĞĞ
+    spi.SPI_Direction         = SPI_Direction_2Lines_FullDuplex; // å…¨åŒå·¥
+    spi.SPI_Mode              = SPI_Mode_Master;                 // ä¸»æœºæ¨¡å¼
+    spi.SPI_DataSize          = SPI_DataSize_8b;                 // 8ä½æ•°æ®
+    spi.SPI_CPOL              = SPI_CPOL_Low;                    // ç©ºé—²æ—¶ SCK ä½ç”µå¹³
+    spi.SPI_CPHA              = SPI_CPHA_1Edge;                  // ç¬¬1ä¸ªæ—¶é’Ÿæ²¿é‡‡æ ·
+    spi.SPI_NSS               = SPI_NSS_Soft;                    // è½¯ä»¶ç®¡ç†ç‰‡é€‰
+    spi.SPI_BaudRatePrescaler = SPI_BaudRatePrescaler_8;         // åˆ†é¢‘ 72/8=9MHz
+    spi.SPI_FirstBit          = SPI_FirstBit_MSB;                // é«˜ä½å…ˆè¡Œ
     spi.SPI_CRCPolynomial     = 7;
     SPI_Init(SPI2, &spi);
 
-    /* 3. Æô¶¯ SPI2 */
+    /* 3. å¯åŠ¨ SPI2 */
     SPI_Cmd(SPI2, ENABLE);
 }
 
-/* ===================== »ù±¾Ö¸Áîº¯Êı ===================== */
+/* ===================== åŸºæœ¬æŒ‡ä»¤å‡½æ•° ===================== */
 
 /**
- * @brief ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷1
- * @return ×´Ì¬¼Ä´æÆ÷Öµ
- * @note bit0 ±íÊ¾ Busy£¬bit1 ±íÊ¾ WEL£¨Ğ´Ê¹ÄÜËø´æ£©
+ * @brief è¯»å–çŠ¶æ€å¯„å­˜å™¨1
+ * @return çŠ¶æ€å¯„å­˜å™¨å€¼
+ * @note bit0 è¡¨ç¤º Busyï¼Œbit1 è¡¨ç¤º WELï¼ˆå†™ä½¿èƒ½é”å­˜ï¼‰
  */
 uint8_t W25Q_ReadSR1(void)
 {
     uint8_t sr;
     W25Q_CS_LOW();
-    SPI2_TransferByte(W25Q_CMD_READ_SR1);   // ·¢ËÍÃüÁî
-    sr = SPI2_TransferByte(0xFF);           // ¶ÁÈ¡×´Ì¬¼Ä´æÆ÷
+    SPI2_TransferByte(W25Q_CMD_READ_SR1);   // å‘é€å‘½ä»¤
+    sr = SPI2_TransferByte(0xFF);           // è¯»å–çŠ¶æ€å¯„å­˜å™¨
     W25Q_CS_HIGH();
     return sr;
 }
 
 /**
- * @brief ·¢ËÍĞ´Ê¹ÄÜÃüÁî
+ * @brief å‘é€å†™ä½¿èƒ½å‘½ä»¤
  */
 void W25Q_WriteEnable(void)
 {
@@ -107,80 +107,80 @@ void W25Q_WriteEnable(void)
 }
 
 /**
- * @brief µÈ´ıĞ¾Æ¬¿ÕÏĞ
+ * @brief ç­‰å¾…èŠ¯ç‰‡ç©ºé—²
  */
 void W25Q_WaitBusy(void)
 {
-    while (W25Q_ReadSR1() & 0x01)   // ÅĞ¶Ï Busy Î»
+    while (W25Q_ReadSR1() & 0x01)   // åˆ¤æ–­ Busy ä½
     { 
-        Delay_us(50);               // Ã¿ 50us ÂÖÑ¯Ò»´Î
+        Delay_us(50);               // æ¯ 50us è½®è¯¢ä¸€æ¬¡
     }
 }
 
-/* ===================== ¶Á JEDEC ID ===================== */
+/* ===================== è¯» JEDEC ID ===================== */
 /**
- * @brief ¶ÁÈ¡ JEDEC ID£¨³§ÉÌID + Æ÷¼şID£©
- * @return 32Î» ID£¬ÀıÈç Winbond W25Q128 = 0xEF4018
+ * @brief è¯»å– JEDEC IDï¼ˆå‚å•†ID + å™¨ä»¶IDï¼‰
+ * @return 32ä½ IDï¼Œä¾‹å¦‚ Winbond W25Q128 = 0xEF4018
  */
 uint32_t W25Q_ReadJEDECID(void)
 {
     uint32_t id = 0;
     W25Q_CS_LOW();
     SPI2_TransferByte(W25Q_CMD_READ_ID);
-    id |= ((uint32_t)SPI2_TransferByte(0xFF)) << 16; // ³§ÉÌ ID
-    id |= ((uint32_t)SPI2_TransferByte(0xFF)) << 8;  // ´æ´¢Æ÷ÀàĞÍ
-    id |= ((uint32_t)SPI2_TransferByte(0xFF));       // ÈİÁ¿
+    id |= ((uint32_t)SPI2_TransferByte(0xFF)) << 16; // å‚å•† ID
+    id |= ((uint32_t)SPI2_TransferByte(0xFF)) << 8;  // å­˜å‚¨å™¨ç±»å‹
+    id |= ((uint32_t)SPI2_TransferByte(0xFF));       // å®¹é‡
     W25Q_CS_HIGH();
     return id;
 }
 
-/* ===================== Êı¾İ¶ÁÈ¡ ===================== */
+/* ===================== æ•°æ®è¯»å– ===================== */
 /**
- * @brief ´ÓÖ¸¶¨µØÖ·¶ÁÈ¡Êı¾İ
- * @param addr ÆğÊ¼µØÖ·£¨24Î»µØÖ·£©
- * @param buf  ´æ·ÅÊı¾İµÄ»º³åÇø
- * @param len  Òª¶ÁÈ¡µÄ×Ö½ÚÊı
+ * @brief ä»æŒ‡å®šåœ°å€è¯»å–æ•°æ®
+ * @param addr èµ·å§‹åœ°å€ï¼ˆ24ä½åœ°å€ï¼‰
+ * @param buf  å­˜æ”¾æ•°æ®çš„ç¼“å†²åŒº
+ * @param len  è¦è¯»å–çš„å­—èŠ‚æ•°
  */
 void W25Q_Read(uint32_t addr, uint8_t *buf, uint16_t len)
 {
     W25Q_CS_LOW();
-    SPI2_TransferByte(W25Q_CMD_READ_DATA);          // ·¢ËÍ¶ÁÃüÁî
-    SPI2_TransferByte((addr >> 16) & 0xFF);         // µØÖ·¸ß×Ö½Ú
-    SPI2_TransferByte((addr >> 8)  & 0xFF);         // µØÖ·ÖĞ×Ö½Ú
-    SPI2_TransferByte(addr & 0xFF);                 // µØÖ·µÍ×Ö½Ú
-    while (len--) *buf++ = SPI2_TransferByte(0xFF); // Á¬Ğø¶ÁÈ¡
+    SPI2_TransferByte(W25Q_CMD_READ_DATA);          // å‘é€è¯»å‘½ä»¤
+    SPI2_TransferByte((addr >> 16) & 0xFF);         // åœ°å€é«˜å­—èŠ‚
+    SPI2_TransferByte((addr >> 8)  & 0xFF);         // åœ°å€ä¸­å­—èŠ‚
+    SPI2_TransferByte(addr & 0xFF);                 // åœ°å€ä½å­—èŠ‚
+    while (len--) *buf++ = SPI2_TransferByte(0xFF); // è¿ç»­è¯»å–
     W25Q_CS_HIGH();
 }
 
-/* ===================== Ò³±à³Ì£¨Ğ´Èë£© ===================== */
+/* ===================== é¡µç¼–ç¨‹ï¼ˆå†™å…¥ï¼‰ ===================== */
 /**
- * @brief Ò³±à³Ì£¨×î¶à 256 ×Ö½Ú£¬ÇÒ²»¿É¿çÒ³£©
- * @param addr ÆğÊ¼µØÖ·£¨±ØĞëÔÚÒ³ÄÚ£©
- * @param buf  ´ıĞ´ÈëµÄÊı¾İ»º³åÇø
- * @param len  Ğ´Èë³¤¶È£¨×î´ó 256£©
+ * @brief é¡µç¼–ç¨‹ï¼ˆæœ€å¤š 256 å­—èŠ‚ï¼Œä¸”ä¸å¯è·¨é¡µï¼‰
+ * @param addr èµ·å§‹åœ°å€ï¼ˆå¿…é¡»åœ¨é¡µå†…ï¼‰
+ * @param buf  å¾…å†™å…¥çš„æ•°æ®ç¼“å†²åŒº
+ * @param len  å†™å…¥é•¿åº¦ï¼ˆæœ€å¤§ 256ï¼‰
  */
 void W25Q_PageProgram(uint32_t addr, const uint8_t *buf, uint16_t len)
 {
     if (len == 0) return;
-    if (len > W25Q_PAGE_SIZE) len = W25Q_PAGE_SIZE; // ·ÀÖ¹Òç³ö
+    if (len > W25Q_PAGE_SIZE) len = W25Q_PAGE_SIZE; // é˜²æ­¢æº¢å‡º
 
-    W25Q_WriteEnable();  // ÏÈÊ¹ÄÜĞ´²Ù×÷
+    W25Q_WriteEnable();  // å…ˆä½¿èƒ½å†™æ“ä½œ
 
     W25Q_CS_LOW();
-    SPI2_TransferByte(W25Q_CMD_PAGE_PROGRAM);       // Ò³Ğ´ÈëÃüÁî
-    SPI2_TransferByte((addr >> 16) & 0xFF);         // µØÖ·¸ß×Ö½Ú
-    SPI2_TransferByte((addr >> 8)  & 0xFF);         // µØÖ·ÖĞ×Ö½Ú
-    SPI2_TransferByte(addr & 0xFF);                 // µØÖ·µÍ×Ö½Ú
-    while (len--) SPI2_TransferByte(*buf++);        // Ğ´ÈëÊı¾İ
+    SPI2_TransferByte(W25Q_CMD_PAGE_PROGRAM);       // é¡µå†™å…¥å‘½ä»¤
+    SPI2_TransferByte((addr >> 16) & 0xFF);         // åœ°å€é«˜å­—èŠ‚
+    SPI2_TransferByte((addr >> 8)  & 0xFF);         // åœ°å€ä¸­å­—èŠ‚
+    SPI2_TransferByte(addr & 0xFF);                 // åœ°å€ä½å­—èŠ‚
+    while (len--) SPI2_TransferByte(*buf++);        // å†™å…¥æ•°æ®
     W25Q_CS_HIGH();
 
-    W25Q_WaitBusy(); // µÈ´ıĞ´Íê³É
+    W25Q_WaitBusy(); // ç­‰å¾…å†™å®Œæˆ
 }
 
-/* ===================== ²Á³ı²Ù×÷ ===================== */
+/* ===================== æ“¦é™¤æ“ä½œ ===================== */
 /**
- * @brief ²Á³ıÒ»¸öÉÈÇø£¨4KB£©
- * @param addr ÉÈÇøµØÖ·£¨ÈÎÒâµØÖ·£¬ÄÚ²¿»á°´ÉÈÇø¶ÔÆë£©
+ * @brief æ“¦é™¤ä¸€ä¸ªæ‰‡åŒºï¼ˆ4KBï¼‰
+ * @param addr æ‰‡åŒºåœ°å€ï¼ˆä»»æ„åœ°å€ï¼Œå†…éƒ¨ä¼šæŒ‰æ‰‡åŒºå¯¹é½ï¼‰
  */
 void W25Q_SectorErase(uint32_t addr)
 {
@@ -195,8 +195,8 @@ void W25Q_SectorErase(uint32_t addr)
 }
 
 /**
- * @brief ²Á³ıÒ»¸ö 64KB ¿é
- * @param addr ¿éµØÖ·
+ * @brief æ“¦é™¤ä¸€ä¸ª 64KB å—
+ * @param addr å—åœ°å€
  */
 void W25Q_BlockErase64K(uint32_t addr)
 {
@@ -211,8 +211,8 @@ void W25Q_BlockErase64K(uint32_t addr)
 }
 
 /**
- * @brief ÕûÆ¬²Á³ı£¨ËùÓĞÊı¾İÇå 0xFF£©
- * @note ºÄÊ±×î³¤£¬¿ÉÄÜ¼¸Ê®Ãë
+ * @brief æ•´ç‰‡æ“¦é™¤ï¼ˆæ‰€æœ‰æ•°æ®æ¸… 0xFFï¼‰
+ * @note è€—æ—¶æœ€é•¿ï¼Œå¯èƒ½å‡ åç§’
  */
 void W25Q_ChipErase(void)
 {

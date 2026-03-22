@@ -4,7 +4,7 @@
 #include "stm32f10x.h"
 
 //--------------------------------------------------
-// RC522 ¼Ä´æÆ÷µØÖ·¶¨Òå£¨ÒÀ¾İ NXP MFRC522 Êı¾İÊÖ²á£©
+// RC522 å¯„å­˜å™¨åœ°å€å®šä¹‰ï¼ˆä¾æ® NXP MFRC522 æ•°æ®æ‰‹å†Œï¼‰
 //--------------------------------------------------
 #define MFRC522_REG_COMMAND              0x01
 #define MFRC522_REG_COMM_IE_N            0x02
@@ -19,7 +19,7 @@
 #define MFRC522_REG_BIT_FRAMING          0x0D
 #define MFRC522_REG_COLL                 0x0E
 
-// ÃüÁî¼¯¼Ä´æÆ÷×é
+// å‘½ä»¤é›†å¯„å­˜å™¨ç»„
 #define MFRC522_REG_MODE                 0x11
 #define MFRC522_REG_TX_MODE              0x12
 #define MFRC522_REG_RX_MODE              0x13
@@ -34,12 +34,12 @@
 
 #define MFRC522_REG_CRC_RESULT_H         0x21
 #define MFRC522_REG_CRC_RESULT_L         0x22
-#define MFRC522_REG_CRC_RESULT_M         MFRC522_REG_CRC_RESULT_H  // Îª¼æÈİ .c ÎÄ¼şÖĞµÄÃüÃû
+#define MFRC522_REG_CRC_RESULT_M         MFRC522_REG_CRC_RESULT_H  // ä¸ºå…¼å®¹ .c æ–‡ä»¶ä¸­çš„å‘½å
 
-#define MFRC522_REG_VERSION              0x37   // Ğ¾Æ¬°æ±¾ºÅ¼Ä´æÆ÷
+#define MFRC522_REG_VERSION              0x37   // èŠ¯ç‰‡ç‰ˆæœ¬å·å¯„å­˜å™¨
 
 //--------------------------------------------------
-// MFRC522 ÃüÁî×Ö
+// MFRC522 å‘½ä»¤å­—
 //--------------------------------------------------
 #define PCD_IDLE             0x00
 #define PCD_AUTHENT          0x0E
@@ -50,7 +50,7 @@
 #define PCD_CALCCRC          0x03
 
 //--------------------------------------------------
-// Mifare ¿¨ÃüÁî×Ö
+// Mifare å¡å‘½ä»¤å­—
 //--------------------------------------------------
 #define PICC_REQIDL          0x26
 #define PICC_REQALL          0x52
@@ -67,14 +67,14 @@
 #define PICC_HALT            0x50
 
 //--------------------------------------------------
-// ×´Ì¬·µ»ØÖµ
+// çŠ¶æ€è¿”å›å€¼
 //--------------------------------------------------
 #define MI_OK                0
 #define MI_NOTAGERR          1
 #define MI_ERR               2
 
 //--------------------------------------------------
-// º¯ÊıÉùÃ÷
+// å‡½æ•°å£°æ˜
 //--------------------------------------------------
 void RC522_SPI_Init(void);
 void RC522_WriteReg(uint8_t addr, uint8_t val);
