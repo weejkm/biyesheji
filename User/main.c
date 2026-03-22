@@ -48,7 +48,8 @@ int main(void)
 
 	//开启任务调度
     vTaskStartScheduler();
-    while (1) { }
+    //系统开启调度后正常情况下不会执行到这里
+    //while (1) { }
 }
 
 void sys_init(void){
