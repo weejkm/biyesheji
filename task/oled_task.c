@@ -27,6 +27,8 @@ void OLED_Task(void *arg)
             snprintf((char *)buf, sizeof(buf), "%02d:%02d:%02d", MyRTC_Time[3], MyRTC_Time[4], MyRTC_Time[5]);
             OLED_ShowString(32, 0, (char *)buf, OLED_8X16);
 
+            
+
             OLED_ShowChinese(8, 16, "ÎÂ¶È£º");
             snprintf((char *)buf, sizeof(buf), "%d.%d C", dev_dht11.temperature_int, dev_dht11.temperature_dec);
             OLED_ShowString(64, 16, (char *)buf, OLED_8X16);
@@ -81,6 +83,12 @@ void OLED_Task(void *arg)
         else
         {
             OLED_ShowString(16, 32, "ERROR!!!", OLED_8X16);
+        }
+
+        if(g_online_mode) {
+            OLED_ShowImage(112, 0, 16, 16, wifi_online);
+        } else {
+            OLED_ShowImage(112, 0, 16, 16, wifi_unonline);
         }
 
         OLED_Update();

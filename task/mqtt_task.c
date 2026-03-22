@@ -19,7 +19,7 @@
 #define WIFI_SSID      "bin"
 #endif
 
-/* ç»Ÿä¸€åç§°ï¼šæˆ‘åé¢ä»£ç ç”¨ WIFI_PWDï¼Œæ‰€ä»¥è¿™é‡ŒæŠŠ WIFI_PWD å®šä¹‰å‡ºæ¥ */
+/* Í³Ò»Ãû³Æ£ºÎÒºóÃæ´úÂëÓÃ WIFI_PWD£¬ËùÒÔÕâÀï°Ñ WIFI_PWD ¶¨Òå³öÀ´ */
 #ifndef WIFI_PWD
 #define WIFI_PWD       "88888888"
 #endif
@@ -36,7 +36,7 @@
 #define MQTT_CLIENT_ID "ESP01"
 #endif
 
-/* ç»Ÿä¸€åç§°ï¼šæˆ‘åé¢ä»£ç ç”¨ MQTT_USER / MQTT_PASS */
+/* Í³Ò»Ãû³Æ£ºÎÒºóÃæ´úÂëÓÃ MQTT_USER / MQTT_PASS */
 #ifndef MQTT_USER
 #define MQTT_USER      "5o6nhxbmqk80h82d"
 #endif
@@ -45,17 +45,17 @@
 #define MQTT_PASS      "sIxS9ob7Qm"
 #endif
 
-/* ThingsCloud ä¸»é¢˜ */
+/* ThingsCloud Ö÷Ìâ */
 #ifndef MQTT_TOPIC_PUB
-#define MQTT_TOPIC_PUB        "attributes"          /* è®¾å¤‡ä¸ŠæŠ¥å±æ€§ */
+#define MQTT_TOPIC_PUB        "attributes"          /* Éè±¸ÉÏ±¨ÊôĞÔ */
 #endif
 
 #ifndef MQTT_TOPIC_SUB_PUSH
-#define MQTT_TOPIC_SUB_PUSH   "attributes/push"     /* äº‘ç«¯ä¸‹å‘å±æ€§ */
+#define MQTT_TOPIC_SUB_PUSH   "attributes/push"     /* ÔÆ¶ËÏÂ·¢ÊôĞÔ */
 #endif
 
 #ifndef MQTT_TOPIC_SUB_RESP
-#define MQTT_TOPIC_SUB_RESP   "attributes/response" /* ä¸ŠæŠ¥åº”ç­” */
+#define MQTT_TOPIC_SUB_RESP   "attributes/response" /* ÉÏ±¨Ó¦´ğ */
 #endif
 
 /* link_id / scheme */
@@ -64,10 +64,10 @@
 #endif
 
 #ifndef MQTT_SCHEME
-#define MQTT_SCHEME    ((uint8_t)1)  /* ä»¥ä½  ESP8266.h çš„ scheme å®šä¹‰ä¸ºå‡† */
+#define MQTT_SCHEME    ((uint8_t)1)  /* ÒÔÄã ESP8266.h µÄ scheme ¶¨ÒåÎª×¼ */
 #endif
 
-/* è¶…æ—¶/é‡è¯• */
+/* ³¬Ê±/ÖØÊÔ */
 #ifndef WIFI_TIMEOUT_MS
 #define WIFI_TIMEOUT_MS   15000u
 #endif
@@ -90,7 +90,7 @@
 #endif
 
 
-/* ========== å°å·¥å…·ï¼šå¼± JSON æå–ï¼ˆä¸ä½  main.c çš„é€»è¾‘ä¸€è‡´ï¼‰ ========== */
+/* ========== Ğ¡¹¤¾ß£ºÈõ JSON ÌáÈ¡£¨ÓëÄã main.c µÄÂß¼­Ò»ÖÂ£© ========== */
 static uint8_t json_get_float(const char *json, const char *key, float *out)
 {
     const char *p = strstr(json, key);
@@ -124,7 +124,7 @@ static uint8_t json_get_u64(const char *json, const char *key, uint64_t *out)
     return 0;
 }
 
-/* ========== ESP8266 è®¢é˜…æ¶ˆæ¯å›è°ƒï¼šESP8266.c ä¼šåœ¨æ”¶åˆ° +MQTTSUBRECV åè§¦å‘ ========== */
+/* ========== ESP8266 ¶©ÔÄÏûÏ¢»Øµ÷£ºESP8266.c »áÔÚÊÕµ½ +MQTTSUBRECV ºó´¥·¢ ========== */
 static void on_mqtt_subrecv(uint8_t link_id, const char *topic, const char *payload)
 {
     (void)link_id;
@@ -133,7 +133,7 @@ static void on_mqtt_subrecv(uint8_t link_id, const char *topic, const char *payl
     ESP8266_HandleCommand(topic, payload);
 }
 
-/* ========== è¿æ¥ + è®¢é˜… ========== */
+/* ========== Á¬½Ó + ¶©ÔÄ ========== */
 static uint8_t mqtt_full_connect(void)
 {
     wifi_t wifi;
@@ -147,7 +147,7 @@ static uint8_t mqtt_full_connect(void)
         return 0;
     }
 
-    /* ç­‰å¾…çŠ¶æ€å˜ OKï¼ˆURC: WIFI GOT IPï¼‰ */
+    /* µÈ´ı×´Ì¬±ä OK£¨URC: WIFI GOT IP£© */
     for (int i = 0; i < 300; i++) {
         ESP8266_Process();
         if (ESP8266_IsWiFiOK()) break;
@@ -155,7 +155,7 @@ static uint8_t mqtt_full_connect(void)
     }
     if (!ESP8266_IsWiFiOK()) return 0;
 
-    /* 2) MQTT ç”¨æˆ·é…ç½® */
+    /* 2) MQTT ÓÃ»§ÅäÖÃ */
     cfg.link_id   = MQTT_LINK_ID;
     cfg.scheme    = MQTT_SCHEME;
     cfg.client_id = MQTT_CLIENT_ID;
@@ -166,13 +166,13 @@ static uint8_t mqtt_full_connect(void)
         return 0;
     }
 
-    /* 3) MQTT è¿æ¥ */
+    /* 3) MQTT Á¬½Ó */
     if (!ESP8266_MQTT_Connect(MQTT_LINK_ID, MQTT_HOST, (uint16_t)MQTT_PORT,
                              MQTT_RECONNECT, MQTT_TIMEOUT_MS, MQTT_RETRY)) {
         return 0;
     }
 
-    /* ç­‰å¾… MQTT OKï¼ˆURC: +MQTTCONNECTED:ï¼‰ */
+    /* µÈ´ı MQTT OK£¨URC: +MQTTCONNECTED:£© */
     for (int i = 0; i < 300; i++) {
         ESP8266_Process();
         if (ESP8266_IsMQTTOK()) break;
@@ -180,11 +180,11 @@ static uint8_t mqtt_full_connect(void)
     }
     if (!ESP8266_IsMQTTOK()) return 0;
 
-    /* 4) è®¢é˜…ï¼ˆæ³¨æ„ï¼šä½ çš„ Subscribe æ²¡æœ‰ callback å‚æ•°ï¼‰ */
+    /* 4) ¶©ÔÄ£¨×¢Òâ£ºÄãµÄ Subscribe Ã»ÓĞ callback ²ÎÊı£© */
 	ESP8266_MQTT_Subscribe(MQTT_LINK_ID, MQTT_TOPIC_SUB_PUSH, 0, MQTT_TIMEOUT_MS);
 	ESP8266_MQTT_Subscribe(MQTT_LINK_ID, MQTT_TOPIC_SUB_RESP, 0, MQTT_TIMEOUT_MS);
 
-    /* 5) è¯·æ±‚äº‘ç«¯æ—¶é—´ä¸€æ¬¡ */
+    /* 5) ÇëÇóÔÆ¶ËÊ±¼äÒ»´Î */
     if (g_mqtt_pub_q) {
         mqtt_pub_msg_t m;
         memset(&m, 0, sizeof(m));
@@ -198,7 +198,7 @@ static uint8_t mqtt_full_connect(void)
     return 1;
 }
 
-/* ========== äº‘ç«¯ä¸‹å‘å¤„ç†ï¼šä¸ä¹‹å‰é€»è¾‘ä¸€è‡´ï¼Œä½†è°ƒç”¨ä½ å·¥ç¨‹çœŸå®é©±åŠ¨ ========== */
+/* ========== ÔÆ¶ËÏÂ·¢´¦Àí£ºÓëÖ®Ç°Âß¼­Ò»ÖÂ£¬µ«µ÷ÓÃÄã¹¤³ÌÕæÊµÇı¶¯ ========== */
 void ESP8266_HandleCommand(const char *topic, const char *json)
 {
     if (!topic || !json) return;
@@ -209,41 +209,41 @@ void ESP8266_HandleCommand(const char *topic, const char *json)
         uint64_t ts = 0;
         uint8_t changed_threshold = 0;
 
-        /* é˜ˆå€¼ */
+        /* ãĞÖµ */
         if (json_get_float(json, "\"yu_tmp\"", &f))   { set_temp_threshold  = (uint8_t)f; changed_threshold = 1; }
         if (json_get_float(json, "\"yu_hum\"", &f))   { set_hum_threshold   = (uint8_t)f; changed_threshold = 1; }
         if (json_get_float(json, "\"yu_light\"", &f)) { set_light_threshold = (uint8_t)f; changed_threshold = 1; }
 
-        /* é£æ‰‡ */
+        /* ·çÉÈ */
         if (json_get_float(json, "\"fan_state\"", &f)) {
             dev_fan_state = (uint8_t)f;
             Fan_set(dev_fan_state);
         }
 
-        /* çª—å¸˜ */
+        /* ´°Á± */
         if (json_get_float(json, "\"curtain_state\"", &f)) {
             dev_curtain_state = (uint8_t)f;
             if (dev_curtain_state) {
-                Servo_SetON;    /* ä½ çš„ Servo.h æ˜¯å®è¯­å¥ï¼Œä¸èƒ½å†™æˆ {Servo_SetON;} */
+                Servo_SetON;    /* ÄãµÄ Servo.h ÊÇºêÓï¾ä£¬²»ÄÜĞ´³É {Servo_SetON;} */
             } else {
                 Servo_SetOFF;
             }
         }
 
-        /* ç¯äº®åº¦ */
+        /* µÆÁÁ¶È */
         if (json_get_float(json, "\"LED_state\"", &f)) {
             dev_led_level = (uint8_t)f;
             if (dev_led_level > 100) dev_led_level = 100;
             LED_Set_light(dev_led_level);
         }
 
-        /* æ ¡æ—¶ï¼šts(ms) */
+        /* Ğ£Ê±£ºts(ms) */
         if (!g_time_synced && json_get_u64(json, "\"ts\"", &ts)) {
             RTC_SetCounter((uint32_t)(ts / 1000ULL));
             g_time_synced = 1;
         }
 
-        /* é˜ˆå€¼å˜åŒ–å›æŠ¥ */
+        /* ãĞÖµ±ä»¯»Ø±¨ */
         if (changed_threshold && g_mqtt_pub_q) {
             mqtt_pub_msg_t m;
             memset(&m, 0, sizeof(m));
@@ -256,33 +256,33 @@ void ESP8266_HandleCommand(const char *topic, const char *json)
             xQueueSend(g_mqtt_pub_q, &m, 0);
         }
 
-        /* äº‘ç«¯ä¸‹å‘ => åˆ‡æ‰‹åŠ¨ */
+        /* ÔÆ¶ËÏÂ·¢ => ÇĞÊÖ¶¯ */
         g_auto_mode = 0;
     }
 }
 
-/* ========== MQTT ä»»åŠ¡ï¼šè½®è¯¢ ESP8266_Process + å‘å¸ƒé˜Ÿåˆ— ========== */
+/* ========== MQTT ÈÎÎñ£ºÂÖÑ¯ ESP8266_Process + ·¢²¼¶ÓÁĞ ========== */
 void EspMqtt_Task(void *arg)
 {
     (void)arg;
 
-    /* æ³¨å†Œè®¢é˜…å›è°ƒï¼ˆé  ESP8266_Process è§£æ URC åè§¦å‘ï¼‰ */
+    /* ×¢²á¶©ÔÄ»Øµ÷£¨¿¿ ESP8266_Process ½âÎö URC ºó´¥·¢£© */
     ESP8266_SetMqttMsgCallback(on_mqtt_subrecv);
 
-    /* å…ˆè¿ä¸€æ¬¡ */
+    /* ÏÈÁ¬Ò»´Î */
     (void)mqtt_full_connect();
 
     while (1) {
 
-        /* æ¶ˆè´¹ URCï¼ˆåŒ…æ‹¬ WIFI/MQTT çŠ¶æ€å˜åŒ–ã€è®¢é˜…æ¶ˆæ¯ï¼‰ */
+        /* Ïû·Ñ URC£¨°üÀ¨ WIFI/MQTT ×´Ì¬±ä»¯¡¢¶©ÔÄÏûÏ¢£© */
         ESP8266_Process();
 
-        /* æ‰çº¿é‡è¿ï¼ˆä½  ESP8266.c é‡Œ WIFI DISCONNECT ä¼šæŠŠ mqtt_ok æ¸… 0ï¼‰ */
+        /* µôÏßÖØÁ¬£¨Äã ESP8266.c Àï WIFI DISCONNECT »á°Ñ mqtt_ok Çå 0£© */
         if (!ESP8266_IsWiFiOK() || !ESP8266_IsMQTTOK()) {
             (void)mqtt_full_connect();
         }
 
-        /* å‘å¸ƒé˜Ÿåˆ— */
+        /* ·¢²¼¶ÓÁĞ */
         if (g_mqtt_pub_q) {
             mqtt_pub_msg_t m;
             if (xQueueReceive(g_mqtt_pub_q, &m, pdMS_TO_TICKS(100)) == pdPASS) {
@@ -294,7 +294,7 @@ void EspMqtt_Task(void *arg)
                                               m.retain,
                                               PUB_TIMEOUT_MS);
                 } else {
-                    /* MQTT ä¸OKåˆ™å¡å›é˜Ÿå¤´ï¼Œç¨åé‡è¯• */
+                    /* MQTT ²»OKÔòÈû»Ø¶ÓÍ·£¬ÉÔºóÖØÊÔ */
                     xQueueSendToFront(g_mqtt_pub_q, &m, 0);
                 }
             }
