@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "delay.h": "c",
+        "limits": "c",
+        "memory": "c",
+        "stm32f10x_usart.h": "c",
+        "file": "c",
+        "string": "c",
+        "stm32f10x_rcc.h": "c",
+        "usart.h": "c",
+        "stm32f10x.h": "c",
+        "stdio.h": "c"
+    }
+}

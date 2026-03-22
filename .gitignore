@@ -1,0 +1,25 @@
+# Keil / MDK build output
+*.o
+*.d
+*.crf
+*.map
+*.lst
+*.axf
+*.hex
+*.bin
+*.uvoptx
+*.uvgui.*
+*.bak
+
+# Debug/Objects/Listings
+DebugConfig/
+Objects/
+Listings/
+
+# User/temp
+JLinkLog.txt
+*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db

@@ -1,0 +1,71 @@
+#include "stm32f10x.h"          
+#include "Delay.h"
+#include "OLED.h"
+#include "Key.h"
+#include "MyRTC.h"
+#include "USART.h"
+#include "ESP8266.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main(void)
+{
+    // 初始化OLED显示屏
+    OLED_Init();
+    OLED_ShowString(1, 1, "ESP8266 Test");
+    
+    // 初始化ESP8266模块
+    if(ESP8266_Init() == ESP8266_SUCCESS)
+    {
+        OLED_ShowString(2, 1, "ESP8266 OK");
+        Delay_ms(1000);
+        
+        // 连接到WiFi
+        if(ESP8266_ConnectToWiFi() == ESP8266_SUCCESS)
+        {
+            OLED_ShowString(3, 1, "WiFi Connected");
+            
+            // 获取IP地址
+            char ip[20] = {0};
+            if(ESP8266_GetIP(ip) == ESP8266_SUCCESS)
+            {
+                OLED_ShowString(4, 1, ip);
+                
+                // 建立TCP连接
+                if(ESP8266_TCPConnect() == ESP8266_SUCCESS)
+                {
+                    OLED_ShowString(5, 1, "TCP Connected");
+                    
+                    // 发送HTTP GET请求
+                    char response[200] = {0};
+                    if(ESP8266_SendHttpGet("www.baidu.com", "/", response) == ESP8266_SUCCESS)
+                    {
+                        OLED_ShowString(6, 1, "GET Success");
+                    }
+                    else
+                    {
+                        OLED_ShowString(6, 1, "GET Failed");
+                    }
+                }
+                else
+                {
+                    OLED_ShowString(5, 1, "TCP Failed");
+                }
+            }
+        }
+        else
+        {
+            OLED_ShowString(3, 1, "WiFi Failed");
+        }
+    }
+    else
+    {
+        OLED_ShowString(2, 1, "ESP8266 Error");
+    }
+
+    while (1)
+    {
+        // 主循环
+    }
+}
